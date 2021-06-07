@@ -32,10 +32,10 @@ yarn add -D create-project-files
 
 ### Simple Usage Example
 
-**1.** Create a folder called `__file-templates__` in the root directory of your project.
-**2.** Create a file called `test.txt` in the `__file-templates__` folder.
-**3.** Open a terminal and type `cpf create text.txt .`.
-**4.** Now you should see a file called `text.txt` in your root directory.
+1. Create a folder called `__file-templates__` in the root directory of your project.
+2. Create a file called `test.txt` in the `__file-templates__` folder.
+3. Open a terminal and type `cpf create text.txt .`.
+4. Now you should see a file called `text.txt` in your root directory.
 
 ### Config File `Coming soon`
 
