@@ -18,10 +18,15 @@
     "local-unix": "yarn build && yarn global add file:$INIT_CWD",
     "publish": "yarn build && npm publish",
     "files-publish": "npm pack --dry-run",
-    "dev": "node -r ts-node/register src/index.ts",
-    "dev-watch": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/index.ts"
+    "dev": "node -r ts-node/register src/index.ts"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0",
+    "ora": "^5.4.0"
   },
   "devDependencies": {
+    "@types/node": "^15.12.1",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "eslint": "^7.28.0",
@@ -41,10 +46,5 @@
     "package.json",
     "LICENSE",
     "README.md"
-  ],
-  "dependencies": {
-    "chalk": "^4.1.1",
-    "commander": "^7.2.0",
-    "ora": "^5.4.0"
-  }
+  ]
 }
