@@ -4,6 +4,9 @@
     "node": true,
     "jest": true
   },
+  "globals": {
+    "BufferEncoding": true
+  },
   "extends": ["standard", "plugin:prettier/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
