@@ -11,6 +11,8 @@ interface ProgramOptions {
   name: string
   templatesFolder: string
   encoding: BufferEncoding
+  replaceNames?: string[]
+  brackets: boolean
 }
 
 program
@@ -29,6 +31,15 @@ program
     '-e, --encoding [encoding]',
     'Change the content encoding of the read files',
     'utf-8',
+  )
+  .option(
+    '-rn, --replace-names [names...]',
+    'Replace file or directory names',
+    undefined,
+  )
+  .option(
+    '-nb, --no-brackets',
+    'Make brackets not required when using the --replace-names option',
   )
   .action((source: string, destination: string, options: ProgramOptions) => {
     const templatesDir = path.resolve(process.cwd(), options.templatesFolder)
@@ -50,6 +61,33 @@ program
     const isSourcePathDirectory = fsStatus.isDirectory()
     const isSourcePathFile = fsStatus.isFile()
 
+    const parsedNamesToReplace = options.replaceNames?.map((keyAndName) => {
+      const [key, name] = keyAndName.split('=')
+      return { key, name }
+    })
+
+    const isReplaceNamesOptionIncorrectly = parsedNamesToReplace?.some(
+      ({ key, name }) => !key || !name,
+    )
+
+    if (isReplaceNamesOptionIncorrectly) {
+      console.log(
+        chalk.red(`The --replace-names option is incorrectly formatted`),
+      )
+
+      console.log(
+        chalk.green('Expected: '),
+        chalk.green('-rn key1=name1 key2=name2'),
+      )
+
+      console.log(
+        chalk.redBright('Received: '),
+        chalk.redBright(`-rn ${options.replaceNames}`),
+      )
+
+      return
+    }
+
     if (isSourcePathDirectory) {
       const directoryFiles = fs.readdirSync(sourcePath)
 
@@ -60,7 +98,21 @@ program
 
       const directoryParts = source.split('/')
       const defaultDirectoryName = directoryParts[directoryParts.length - 1]
-      const directoryName = options.name || defaultDirectoryName
+
+      let replacedDirectoryName = defaultDirectoryName
+      if (parsedNamesToReplace) {
+        parsedNamesToReplace.forEach(({ key, name }) => {
+          const keyToUse = options.brackets ? `[${key}]` : key
+          if (replacedDirectoryName.includes(keyToUse)) {
+            replacedDirectoryName = replacedDirectoryName.replace(
+              keyToUse,
+              name,
+            )
+          }
+        })
+      }
+
+      const directoryName = options.name || replacedDirectoryName
       const destinationPath = path.resolve(
         process.cwd(),
         destination,
@@ -70,31 +122,50 @@ program
       fs.mkdirSync(destinationPath)
 
       directoryFiles.forEach((fileName) => {
+        const filePath = path.resolve(sourcePath, fileName)
+        const fileContent = fs.readFileSync(filePath, options.encoding)
+
+        let replacedFileName = fileName
+        if (parsedNamesToReplace) {
+          parsedNamesToReplace.forEach(({ key, name }) => {
+            const keyToUse = options.brackets ? `[${key}]` : key
+            if (replacedFileName.includes(keyToUse)) {
+              replacedFileName = replacedFileName.replace(keyToUse, name)
+            }
+          })
+        }
+
         const fileDestinationPath = path.resolve(
           process.cwd(),
           destinationPath,
-          fileName,
+          replacedFileName,
         )
 
-        const filePath = path.resolve(sourcePath, fileName)
-        const fileContent = fs.readFileSync(filePath, options.encoding)
         fs.writeFileSync(fileDestinationPath, fileContent)
         console.log(chalk.green(`File created at ${fileDestinationPath}`))
       })
-
-      return
     } else if (isSourcePathFile) {
       const sourceParts = source.split('/')
       const defaultFileName = sourceParts[sourceParts.length - 1]
-      const fileName = options.name || defaultFileName
+
+      let replacedFileName = defaultFileName
+      if (parsedNamesToReplace) {
+        parsedNamesToReplace.forEach(({ key, name }) => {
+          const keyToUse = options.brackets ? `[${key}]` : key
+          if (replacedFileName.includes(keyToUse)) {
+            replacedFileName = replacedFileName.replace(keyToUse, name)
+          }
+        })
+      }
+
+      const fileName = options.name || replacedFileName
       const destinationPath = path.resolve(process.cwd(), destination, fileName)
       const fileContent = fs.readFileSync(sourcePath, options.encoding)
       fs.writeFileSync(destinationPath, fileContent)
       console.log(chalk.green(`File created at ${destinationPath}`))
-      return
+    } else {
+      console.log(chalk.red('The source can only be a file or a directory'))
     }
-
-    console.log(chalk.red('The source can only be a file or a directory'))
   })
 
 program.parse(process.argv)

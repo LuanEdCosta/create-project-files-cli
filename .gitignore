@@ -1,4 +1,5 @@
 /lib
 /node_modules
 /__file-templates__
+/__testing-folder__
 todo.md
