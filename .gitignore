@@ -1,6 +1,7 @@
 /lib
 /node_modules
 /__file-templates__
-/__testing-folder__
+/__testing-*__
+/__custom-*__
 /coverage
 todo.md
