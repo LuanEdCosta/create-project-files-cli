@@ -1,4 +1,7 @@
-# :page_facing_up: Create Project Files CLI
+<div style="text-align:center">
+  <img src="/resources/LogoRound.png" width="150px" height="150px" alt="Project Logo">
+  <h1>Create Project Files CLI</h1>
+</div>
 
 Create your project files faster using this CLI. You can create file templates and, with one command, create copies of your templates in the folder you want.
 
