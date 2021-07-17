@@ -21,9 +21,10 @@
 
 Create your project files faster using this CLI. You can create file templates and, with one command, create copies of your templates in the folder you want.
 
-- :heavy_check_mark: Faster and easier than code snippets
-- :heavy_check_mark: You can add the template files in the version control system
-- :heavy_check_mark: Replace text inside your template files
+- :white_check_mark: Faster and easier than code snippets
+- :white_check_mark: You can add the template files in the version control system
+- :white_check_mark: Rename template files and folders
+- :white_check_mark: Replace text inside your template files
 
 ## :zap: Installation
 
@@ -47,25 +48,49 @@ npm i -D create-project-files
 yarn add -D create-project-files
 ```
 
-## :fire: How to Use
+## :point_right: Getting Started
 
-### Simple Usage Example
+Follow the steps below to learn how to use tis library.
 
 1. Create a folder called `__file-templates__` in the root directory of your project.
 2. Create a file called `test.txt` in the `__file-templates__` folder.
 3. Open a terminal and type `cpf create text.txt .`.
 4. Now you should see a file called `text.txt` in your root directory.
 
-### Config File `Coming soon`
+## :page_facing_up: Documentation
 
-`...`
+:large_blue_circle: `cpf create <source> <destination> [options]`
 
-<!-- Create a file called `.file-templates.json` in the root directory of your project. -->
+Creates a file or folder based on the `<source> at <destination>`.
+
+| Option                              | Description                                                           | Example                                                |
+| ----------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------ |
+| -n, --name [name]                   | Changes the name of a file or directory.                              | cpf create text.txt src -n newName.txt                 |
+| -t, --templates-folder [path]       | Path to templates directory.                                          | cpf create text.txt src -t my-templates                |
+| -e, --encoding [encoding]           | Changes the content encoding of the read files.                       | cpf create text.txt src -e base64                      |
+| -rn, --replace-names [names...]     | Replaces the names of a file or directory.                            | cpf create [fileName].txt src -rn fileName=myFile      |
+| -nb, --no-brackets                  | Makes brackets not required when using the --replace-names option.    | cpf create fileName.txt src -rn fileName=otherFile -nb |
+| -rc, --replace-content [content...] | Replaces parts of the contents of a file or files within a directory. | cpf create text.txt src -rc file=myFile                |
+
+:large_blue_circle: `cpf help [command]`
+
+Display the help for a command or all commands.
+
+## :hourglass: Coming Soon
+
+- [ ] Find files and folders in multiple template folders.
+- [ ] Create multiple files and folders with only one command
+- [ ] Ignore case when replacing the content of a file
+- [ ] Set an alias to a file or folder inside the templates folder
+- [ ] Create a config file to simplify the use of this library
+- [ ] Support for multiple languages
 
 ## :handshake: Contributing
+
+:star: _This project can be better with your help_ :star:
 
 See the [CONTRIBUTION.md](CONTRIBUTION.md) to see how to contribute with this project.
 
 ## :man: Author
 
-Luan Eduardo da Costa | [Follow me on Linkedin](https://www.linkedin.com/in/luaneducosta/)
+Created with :heart: by Luan Eduardo da Costa | [Follow me on Linkedin](https://www.linkedin.com/in/luaneducosta/)
