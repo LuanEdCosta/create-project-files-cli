@@ -12,7 +12,16 @@ interface ProgramOptions {
   templatesFolder: string
   encoding: BufferEncoding
   replaceNames?: string[]
+  replaceContent?: string[]
   brackets: boolean
+}
+
+const replaceTextPieces = (
+  text: string,
+  pieces: { [key: string]: string },
+): string => {
+  const regex = new RegExp(Object.keys(pieces).join('|'), 'g')
+  return text.replace(regex, (matched) => pieces[matched])
 }
 
 program
@@ -21,25 +30,30 @@ program
   .description(
     'Creates a file or folder based on the <source> at <destination>',
   )
-  .option('-n, --name [name]', 'Change the file or directory name', '')
+  .option('-n, --name [name]', 'Changes the name of a file or directory', '')
   .option(
     '-t, --templates-folder [path]',
-    'Path to the templates directory',
+    'Path to templates directory',
     '__file-templates__',
   )
   .option(
     '-e, --encoding [encoding]',
-    'Change the content encoding of the read files',
+    'Changes the content encoding of the read files',
     'utf-8',
   )
   .option(
     '-rn, --replace-names [names...]',
-    'Replace file or directory names',
+    'Replaces the names of a file or directory',
     undefined,
   )
   .option(
     '-nb, --no-brackets',
-    'Make brackets not required when using the --replace-names option',
+    'Makes brackets not required when using the --replace-names option',
+  )
+  .option(
+    '-rc, --replace-content [content...]',
+    'Replaces parts of the contents of a file or files within a directory',
+    undefined,
   )
   .action((source: string, destination: string, options: ProgramOptions) => {
     const templatesDir = path.resolve(process.cwd(), options.templatesFolder)
@@ -88,6 +102,37 @@ program
       return
     }
 
+    const replaceContentObject: { [key: string]: string } = {}
+
+    options.replaceContent?.forEach((keyAndText) => {
+      const [key, text] = keyAndText.split('=')
+      replaceContentObject[key] = text
+    })
+
+    const isReplaceContentOptionIncorrectly = Object.entries(
+      replaceContentObject,
+    ).some(([key, text]) => !key || !text)
+
+    if (isReplaceContentOptionIncorrectly) {
+      console.log(
+        chalk.red(`The --replace-content option is incorrectly formatted`),
+      )
+
+      console.log(
+        chalk.green('Expected: '),
+        chalk.green('-rc key1=text1 key2=text2'),
+      )
+
+      console.log(
+        chalk.redBright('Received: '),
+        chalk.redBright(`-rc ${options.replaceContent}`),
+      )
+
+      return
+    }
+
+    const canReplaceContent = Object.keys(replaceContentObject).length > 0
+
     if (isSourcePathDirectory) {
       const directoryFiles = fs.readdirSync(sourcePath)
 
@@ -124,6 +169,9 @@ program
       directoryFiles.forEach((fileName) => {
         const filePath = path.resolve(sourcePath, fileName)
         const fileContent = fs.readFileSync(filePath, options.encoding)
+        const newFileContent = canReplaceContent
+          ? replaceTextPieces(fileContent, replaceContentObject)
+          : fileContent
 
         let replacedFileName = fileName
         if (parsedNamesToReplace) {
@@ -141,7 +189,7 @@ program
           replacedFileName,
         )
 
-        fs.writeFileSync(fileDestinationPath, fileContent)
+        fs.writeFileSync(fileDestinationPath, newFileContent)
         console.log(chalk.green(`File created at ${fileDestinationPath}`))
       })
     } else if (isSourcePathFile) {
@@ -161,7 +209,11 @@ program
       const fileName = options.name || replacedFileName
       const destinationPath = path.resolve(process.cwd(), destination, fileName)
       const fileContent = fs.readFileSync(sourcePath, options.encoding)
-      fs.writeFileSync(destinationPath, fileContent)
+      const newFileContent = canReplaceContent
+        ? replaceTextPieces(fileContent, replaceContentObject)
+        : fileContent
+      fs.writeFileSync(destinationPath, newFileContent)
+
       console.log(chalk.green(`File created at ${destinationPath}`))
     } else {
       console.log(chalk.red('The source can only be a file or a directory'))
