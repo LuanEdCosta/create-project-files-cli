@@ -50,7 +50,7 @@ yarn add -D create-project-files
 
 ## :point_right: Getting Started
 
-Follow the steps below to learn how to use tis library.
+Follow the steps below to learn how to use this library.
 
 1. Create a folder called `__file-templates__` in the root directory of your project.
 2. Create a file called `test.txt` in the `__file-templates__` folder.
