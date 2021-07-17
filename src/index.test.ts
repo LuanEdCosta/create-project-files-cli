@@ -2,6 +2,11 @@ import { exec } from 'child_process'
 import path from 'path'
 import fs from 'fs'
 
+/**
+ * ! Important Message
+ * Unable to test console.log calls for now. We need to find a new way to tes, so we can test the messages displayed to users.
+ */
+
 describe('Program tests', () => {
   const currentTimestamp = new Date().getTime()
   const testFolderName = `__testing-${currentTimestamp}__`
@@ -51,7 +56,7 @@ describe('Program tests', () => {
     fs.rmSync(testFolderPath, { recursive: true })
   })
 
-  describe('Happy path', () => {
+  describe('Happy Path', () => {
     it('should create a file in the correct destination', async () => {
       await cmd(`create text.txt ${testFolderName}`)
       expect(existsInTestFolder('text.txt')).toBe(true)
@@ -146,6 +151,32 @@ describe('Program tests', () => {
       await cmd(`create ${folderName} ${testFolderName} ${replaceNamesOption}`)
       expect(existsInTestFolder('myFolder')).toBe(true)
       expect(existsInTestFolder('myFolder/myFile.txt')).toBe(true)
+    })
+
+    it('should show success messages to the user', () => {
+      expect(true).toBe(true) // TODO
+    })
+  })
+
+  describe('Error Path', () => {
+    it('should not find the template folder', () => {
+      expect(true).toBe(true) // TODO
+    })
+
+    it('should not find the source path', () => {
+      expect(true).toBe(true) // TODO
+    })
+
+    it('should show --replace-names option incorrectly formatted error', () => {
+      expect(true).toBe(true) // TODO
+    })
+
+    it('should find no files inside the source directory', () => {
+      expect(true).toBe(true) // TODO
+    })
+
+    it('should do nothing because the source is not a folder or a file', () => {
+      expect(true).toBe(true) // TODO
     })
   })
 })
