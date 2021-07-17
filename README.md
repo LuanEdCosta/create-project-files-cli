@@ -1,9 +1,9 @@
-<div style="display:flex;flex-direction:column;align-items:center">
+<div>
   <img src="/resources/LogoRound.png" width="150px" height="150px" alt="Project Logo">
 
   <h1>Create Project Files CLI</h1>
 
-  <div style="margin-bottom:24px">
+  <div>
     <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/luanedcosta/create-project-files-cli.svg">
     <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/luanedcosta/create-project-files-cli.svg">
     <img alt="Repository size" src="https://img.shields.io/github/repo-size/luanedcosta/create-project-files-cli.svg">
@@ -16,6 +16,8 @@
     </a>
   </div>
 </div>
+
+---
 
 Create your project files faster using this CLI. You can create file templates and, with one command, create copies of your templates in the folder you want.
 
