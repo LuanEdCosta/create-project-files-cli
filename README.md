@@ -32,20 +32,20 @@ Create your project files faster using this CLI. You can create file templates a
 
 ```bash
 # With npm
-npm i -g create-project-files
+npm i -g create-project-files-cli
 
 # With yarn
-yarn global add create-project-files
+yarn global add create-project-files-cli
 ```
 
 **Installing as Dev Dependency**
 
 ```bash
 # With npm
-npm i -D create-project-files
+npm i -D create-project-files-cli
 
 # With yarn
-yarn add -D create-project-files
+yarn add -D create-project-files-cli
 ```
 
 ## :point_right: Getting Started
