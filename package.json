@@ -18,7 +18,7 @@
     "test": "jest",
     "local-windows": "yarn build && yarn global add file:%INIT_CWD%",
     "local-unix": "yarn build && yarn global add file:$INIT_CWD",
-    "publish": "yarn clean:lib && yarn build && npm publish",
+    "prepublish": "yarn clean:lib && yarn build",
     "files-publish": "npm pack --dry-run",
     "dev": "node -r ts-node/register src/index.ts",
     "clean:tests": "rimraf __testing-folder__/*",
