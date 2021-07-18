@@ -8,6 +8,11 @@
     "name": "Luan Eduardo da Costa",
     "url": "https://github.com/LuanEdCosta"
   },
+  "keywords": [
+    "create",
+    "files",
+    "cli"
+  ],
   "main": "lib/index.js",
   "bin": {
     "cpf": "./lib/index.js"
