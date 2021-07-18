@@ -54,7 +54,7 @@ Follow the steps below to learn how to use this library.
 
 1. Create a folder called `__file-templates__` in the root directory of your project.
 2. Create a file called `test.txt` in the `__file-templates__` folder.
-3. Open a terminal and type `cpf create text.txt .`.
+3. Open a terminal and type `cpf create text.txt .`
 4. Now you should see a file called `text.txt` in your root directory.
 
 ## :page_facing_up: Documentation
