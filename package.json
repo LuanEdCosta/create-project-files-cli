@@ -18,16 +18,18 @@
     "cpf": "./lib/index.js"
   },
   "scripts": {
+    "dev": "node -r ts-node/register src/index.ts",
     "start": "node lib/index.js",
     "build": "tsc",
     "test": "jest",
-    "local-windows": "yarn build && yarn global add file:%INIT_CWD%",
-    "local-unix": "yarn build && yarn global add file:$INIT_CWD",
     "prepublish": "yarn clean:lib && yarn build",
-    "files-publish": "npm pack --dry-run",
-    "dev": "node -r ts-node/register src/index.ts",
+    "install:windows": "yarn build && yarn global add file:%INIT_CWD%",
+    "install:unix": "yarn build && yarn global add file:$INIT_CWD",
+    "check:files": "npm pack --dry-run",
     "clean:tests": "rimraf __testing-folder__/*",
-    "clean:lib": "rimraf lib"
+    "clean:lib": "rimraf lib",
+    "eslint:lint": "yarn eslint . --ext .js,.jsx,.ts,.tsx",
+    "eslint:fix": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "chalk": "^4.1.1",
