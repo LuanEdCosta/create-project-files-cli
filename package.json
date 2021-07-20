@@ -22,7 +22,7 @@
     "start": "node lib/index.js",
     "build": "tsc",
     "test": "jest",
-    "prepublish": "yarn clean:lib && yarn build",
+    "prepare": "yarn clean:lib && yarn build",
     "install:windows": "yarn build && yarn global add file:%INIT_CWD%",
     "install:unix": "yarn build && yarn global add file:$INIT_CWD",
     "check:files": "npm pack --dry-run",
