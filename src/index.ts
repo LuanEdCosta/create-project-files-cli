@@ -5,6 +5,8 @@ import path from 'path'
 import chalk from 'chalk'
 import { Command } from 'commander'
 
+const packageJson = require('../package.json')
+
 const program = new Command()
 
 interface ProgramOptions {
@@ -25,7 +27,7 @@ const replaceTextPieces = (
 }
 
 program
-  .version('1.0.0')
+  .version(packageJson?.version || 'Not Defined')
   .command('create <source> <destination>')
   .description(
     'Creates a file or folder based on the <source> at <destination>',
