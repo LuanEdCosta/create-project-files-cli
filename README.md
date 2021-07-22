@@ -89,9 +89,8 @@ Display the help for a command or all commands.
 
 :star: _This project can be better with your help_ :star:
 
-- If you find a bug :small_blue_diamond: [Create a BUG issue](https://github.com/LuanEdCosta/create-project-files-cli/issues)
-- If you have an idea :small_blue_diamond: [Create an ENHANCEMENT issue](https://github.com/LuanEdCosta/create-project-files-cli/issues)
-- If you want to contribute with code or documentation :small_blue_diamond: Fork this project and make a pull request
+- If you find a bug or have an good idea :small_blue_diamond: [Create a new issue](https://github.com/LuanEdCosta/create-project-files-cli/issues)
+- If you want to contribute with code or documentation :small_blue_diamond: [Read the contributing guide](/CONTRIBUTING.md)
 
 ## :man: Author
 
