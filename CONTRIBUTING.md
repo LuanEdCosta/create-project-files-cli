@@ -51,43 +51,43 @@ There are many ways to contribute with this project, but we can divide it in two
 Syntax: `yarn dev <command> [...options]`
 
 ```
-$ yarn dev create text.txt src
+yarn dev create text.txt src
 ```
 
 **Run Tests**
 
 ```
-$ yarn test
+yarn test
 ```
 
 **Clean Local Tests**
 
 ```
-$ yarn clean:tests
+yarn clean:tests
 ```
 
 **Install Globally on Windows**
 
 ```
-$ yarn install:windows
+yarn install:windows
 ```
 
 **Install Globally on Unix Based Systems**
 
 ```
-$ yarn install:unix
+yarn install:unix
 ```
 
 **Clean /lib Folder**
 
 ```
-$ yarn clean:lib
+yarn clean:lib
 ```
 
 **Format Code With Eslint**
 
 ```
-$ yarn eslint:fix
+yarn eslint:fix
 ```
 
 ---
