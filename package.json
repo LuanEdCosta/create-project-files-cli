@@ -33,7 +33,8 @@
     "clean:tests": "rimraf __testing-folder__/*",
     "clean:lib": "rimraf lib",
     "eslint:lint": "yarn eslint . --ext .js,.jsx,.ts,.tsx",
-    "eslint:fix": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "eslint:fix": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "create:templates": "node scripts/CreateTestTemplates.js"
   },
   "dependencies": {
     "chalk": "^4.1.1",
