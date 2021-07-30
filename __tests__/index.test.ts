@@ -171,7 +171,7 @@ describe('Program tests', () => {
       expect(true).toBe(true) // TODO
     })
 
-    it('should find no files inside the source directory', () => {
+    it('should find no files inside the source folder', () => {
       expect(true).toBe(true) // TODO
     })
 

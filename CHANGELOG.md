@@ -21,9 +21,9 @@ This is the first version of the library that allows you to create a file or fol
 
 **Options**
 
-- `-n, --name [name]` - Changes the name of a file or directory
-- `-t, --templates-folder [path]` - Path to templates directory
+- `-n, --name [name]` - Changes the name of a file or folder
+- `-t, --templates-folder [path]` - Path to templates folder
 - `-e, --encoding [encoding]` - Changes the content encoding of the read files
-- `-rn, --replace-names [names...]` - Replaces the names of a file or directory
+- `-rn, --replace-names [names...]` - Replaces the names of a file or folder
 - `-nb, --no-brackets` - Makes brackets not required when using the --replace-names option
-- `-rc, --replace-content [content...]` - Replaces parts of the contents of a file or files within a directory
+- `-rc, --replace-content [content...]` - Replaces parts of the contents of a file or files within a folder

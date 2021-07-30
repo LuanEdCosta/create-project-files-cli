@@ -3,7 +3,7 @@
     "target": "ESNext",
     "module": "CommonJS",
     "baseUrl": ".",
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext"],
     "outDir": "./lib",
     "rootDir": "./src",
     "newLine": "lf",
@@ -15,8 +15,11 @@
     "removeComments": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@app/*": ["./src/*"]
+    }
   },
   "include": ["src"],
-  "exclude": ["node_modules", "lib", "src/*.test.ts"]
+  "exclude": ["node_modules", "lib", "**/*.test.ts", "**/*.spec.ts"]
 }

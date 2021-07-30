@@ -60,10 +60,10 @@ npm i -D create-project-files-cli
 
 Follow the steps below to learn how to use this library.
 
-1. Create a folder called `__file-templates__` in the root directory of your project.
+1. Create a folder called `__file-templates__` in the root folder of your project.
 2. Create a file called `test.txt` in the `__file-templates__` folder.
 3. Open a terminal and type `cpf create text.txt .`
-4. Now you should see a file called `text.txt` in your root directory.
+4. Now you should see a file called `text.txt` in your root folder.
 
 ## :page_facing_up: Documentation
 
@@ -71,14 +71,14 @@ Follow the steps below to learn how to use this library.
 
 Creates a file or folder based on the `<source> at <destination>`.
 
-| Option                              | Description                                                           | Example                                                |
-| ----------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------ |
-| -n, --name [name]                   | Changes the name of a file or directory.                              | cpf create text.txt src -n newName.txt                 |
-| -t, --templates-folder [path]       | Path to templates directory.                                          | cpf create text.txt src -t my-templates                |
-| -e, --encoding [encoding]           | Changes the content encoding of the read files.                       | cpf create text.txt src -e base64                      |
-| -rn, --replace-names [names...]     | Replaces the names of a file or directory.                            | cpf create [fileName].txt src -rn fileName=myFile      |
-| -nb, --no-brackets                  | Makes brackets not required when using the --replace-names option.    | cpf create fileName.txt src -rn fileName=otherFile -nb |
-| -rc, --replace-content [content...] | Replaces parts of the contents of a file or files within a directory. | cpf create text.txt src -rc file=myFile                |
+| Option                              | Description                                                        | Example                                                |
+| ----------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------ |
+| -n, --name [name]                   | Changes the name of a file or folder.                              | cpf create text.txt src -n newName.txt                 |
+| -t, --templates-folder [path]       | Path to templates folder.                                          | cpf create text.txt src -t my-templates                |
+| -e, --encoding [encoding]           | Changes the content encoding of the read files.                    | cpf create text.txt src -e base64                      |
+| -rn, --replace-names [names...]     | Replaces the names of a file or folder.                            | cpf create [fileName].txt src -rn fileName=myFile      |
+| -nb, --no-brackets                  | Makes brackets not required when using the --replace-names option. | cpf create fileName.txt src -rn fileName=otherFile -nb |
+| -rc, --replace-content [content...] | Replaces parts of the contents of a file or files within a folder. | cpf create text.txt src -rc file=myFile                |
 
 - :large_blue_circle: `cpf help [command]`
 
