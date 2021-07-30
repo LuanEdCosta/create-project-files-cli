@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 
-import { TextUtils } from '@app/utils'
-import { NotFoundError, SyntaxError } from '@app/errors'
+import { TextUtils } from '@app/core/utils'
+import { NotFoundError, SyntaxError } from '@app/core/errors'
 
 export interface CreateCommandOptions {
   name: string
