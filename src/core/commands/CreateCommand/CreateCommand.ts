@@ -56,15 +56,15 @@ export class CreateCommand {
     this.options = options || this.getDefaultOptions()
   }
 
-  private getTemplatesFolderPath(): string {
+  private _getTemplatesFolderPath(): string {
     return path.resolve(process.cwd(), this.options.templatesFolder)
   }
 
-  private getSourcePath(templatesFolderPath: string): string {
+  private _getSourcePath(templatesFolderPath: string): string {
     return path.resolve(templatesFolderPath, this.source)
   }
 
-  private throwTemplatesFolderNotFound(templatesFolderPath: string): void {
+  private _throwTemplatesFolderNotFound(templatesFolderPath: string): void {
     if (!fs.existsSync(templatesFolderPath)) {
       throw new NotFoundError(
         templatesFolderPath,
@@ -73,13 +73,13 @@ export class CreateCommand {
     }
   }
 
-  private throwSourcePathNotFound(sourcePath: string): void {
+  private _throwSourcePathNotFound(sourcePath: string): void {
     if (!fs.existsSync(sourcePath)) {
       throw new NotFoundError(sourcePath, `${sourcePath} not found`)
     }
   }
 
-  private getSourceType(sourcePath: string): {
+  private _getSourceType(sourcePath: string): {
     isDirectory: boolean
     isFile: boolean
   } {
@@ -92,14 +92,14 @@ export class CreateCommand {
     }
   }
 
-  private getParsedNamesToReplace(): ParsedNamesToReplace[] | undefined {
+  private _getParsedNamesToReplace(): ParsedNamesToReplace[] | undefined {
     return this.options.replaceNames?.map((keyAndName) => {
       const [key, name] = keyAndName.split('=')
       return { key, name }
     })
   }
 
-  private throwNamesToReplaceIncorrectlyFormatted(
+  private _throwNamesToReplaceIncorrectlyFormatted(
     parsedNamesToReplace: ParsedNamesToReplace[],
   ) {
     const isReplaceNamesOptionIncorrectly = parsedNamesToReplace?.some(
@@ -114,7 +114,7 @@ export class CreateCommand {
     }
   }
 
-  private getReplaceContentObject(): ReplaceContentObject {
+  private _getReplaceContentObject(): ReplaceContentObject {
     const replaceContentObject: { [key: string]: string } = {}
     this.options.replaceContent?.forEach((keyAndText) => {
       const [key, text] = keyAndText.split('=')
@@ -123,7 +123,7 @@ export class CreateCommand {
     return replaceContentObject
   }
 
-  private throwReplaceContentOptionIncorrectlyFormatted(
+  private _throwReplaceContentOptionIncorrectlyFormatted(
     replaceContentObject: ReplaceContentObject,
   ) {
     const isReplaceContentOptionIncorrectly = Object.entries(
@@ -138,7 +138,7 @@ export class CreateCommand {
     }
   }
 
-  private throwEmptySourceFolder(
+  private _throwEmptySourceFolder(
     sourcePath: string,
     folderFileNames: string[],
   ) {
@@ -147,12 +147,12 @@ export class CreateCommand {
     }
   }
 
-  private getPathLastPart(path: string): string {
+  private _getPathLastPart(path: string): string {
     const pathParts = path.split('/')
     return pathParts[pathParts.length - 1]
   }
 
-  private getReplacedName(
+  private _getReplacedName(
     name: string,
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ): string {
@@ -168,22 +168,25 @@ export class CreateCommand {
     return replacedName
   }
 
-  private getSourceName(
+  private _getSourceName(
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ): string {
-    const defaultName = this.getPathLastPart(this.source)
-    const replacedName = this.getReplacedName(defaultName, parsedNamesToReplace)
+    const defaultName = this._getPathLastPart(this.source)
+    const replacedName = this._getReplacedName(
+      defaultName,
+      parsedNamesToReplace,
+    )
     return this.options.name || replacedName
   }
 
-  private getDestinationPath(
+  private _getDestinationPath(
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ): string {
-    const folderName = this.getSourceName(parsedNamesToReplace)
+    const folderName = this._getSourceName(parsedNamesToReplace)
     return path.resolve(process.cwd(), this.destination, folderName)
   }
 
-  private getFileContent(
+  private _getFileContent(
     filePath: string,
     replaceContentObject: ReplaceContentObject,
     canReplaceContent: boolean,
@@ -195,26 +198,26 @@ export class CreateCommand {
   }
 
   public run(): CreateCommandResult[] {
-    const templatesFolderPath = this.getTemplatesFolderPath()
-    this.throwTemplatesFolderNotFound(templatesFolderPath)
+    const templatesFolderPath = this._getTemplatesFolderPath()
+    this._throwTemplatesFolderNotFound(templatesFolderPath)
 
-    const sourcePath = this.getSourcePath(templatesFolderPath)
-    this.throwSourcePathNotFound(sourcePath)
+    const sourcePath = this._getSourcePath(templatesFolderPath)
+    this._throwSourcePathNotFound(sourcePath)
 
-    const parsedNamesToReplace = this.getParsedNamesToReplace()
-    this.throwNamesToReplaceIncorrectlyFormatted(parsedNamesToReplace || [])
+    const parsedNamesToReplace = this._getParsedNamesToReplace()
+    this._throwNamesToReplaceIncorrectlyFormatted(parsedNamesToReplace || [])
 
-    const replaceContentObject = this.getReplaceContentObject()
-    this.throwReplaceContentOptionIncorrectlyFormatted(replaceContentObject)
+    const replaceContentObject = this._getReplaceContentObject()
+    this._throwReplaceContentOptionIncorrectlyFormatted(replaceContentObject)
     const canReplaceContent = Object.keys(replaceContentObject).length > 0
 
-    const sourceType = this.getSourceType(sourcePath)
+    const sourceType = this._getSourceType(sourcePath)
 
     if (sourceType.isDirectory) {
       const folderFileNames = fs.readdirSync(sourcePath)
-      this.throwEmptySourceFolder(sourcePath, folderFileNames)
+      this._throwEmptySourceFolder(sourcePath, folderFileNames)
 
-      const destinationPath = this.getDestinationPath(parsedNamesToReplace)
+      const destinationPath = this._getDestinationPath(parsedNamesToReplace)
       fs.mkdirSync(destinationPath)
 
       const createCommandResults: CreateCommandResult[] = []
@@ -228,13 +231,13 @@ export class CreateCommand {
       folderFileNames.forEach((fileName) => {
         const filePath = path.resolve(sourcePath, fileName)
 
-        const fileContent = this.getFileContent(
+        const fileContent = this._getFileContent(
           filePath,
           replaceContentObject,
           canReplaceContent,
         )
 
-        const replacedFileName = this.getReplacedName(
+        const replacedFileName = this._getReplacedName(
           fileName,
           parsedNamesToReplace,
         )
@@ -256,9 +259,9 @@ export class CreateCommand {
 
       return createCommandResults
     } else if (sourceType.isFile) {
-      const destinationPath = this.getDestinationPath(parsedNamesToReplace)
+      const destinationPath = this._getDestinationPath(parsedNamesToReplace)
 
-      const fileContent = this.getFileContent(
+      const fileContent = this._getFileContent(
         sourcePath,
         replaceContentObject,
         canReplaceContent,

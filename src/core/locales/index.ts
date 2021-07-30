@@ -22,7 +22,7 @@ export class Locale {
     this._locale = locale
   }
 
-  private interpolate(
+  private _interpolate(
     text: string,
     interpolation: TranslationOptions['interpolation'],
   ): string {
@@ -42,11 +42,11 @@ export class Locale {
     if (!localeToUse) return key
 
     const text = AllLocales[localeToUse][key]
-    if (text) return this.interpolate(text, options.interpolation)
+    if (text) return this._interpolate(text, options.interpolation)
 
     const fallbackText = AllLocales[localeToUse][options.fallbackKey || '']
     if (fallbackText) {
-      return this.interpolate(fallbackText, options.interpolation)
+      return this._interpolate(fallbackText, options.interpolation)
     }
 
     return key
