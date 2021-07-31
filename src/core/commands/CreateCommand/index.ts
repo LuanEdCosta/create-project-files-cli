@@ -1,2 +1,3 @@
+export * from './Types'
 export * from './CreateCommand'
-export * from './DefaultOptions'
+export * from './Defaults'

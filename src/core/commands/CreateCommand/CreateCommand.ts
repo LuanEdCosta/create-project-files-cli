@@ -4,47 +4,19 @@ import path from 'path'
 import { TextUtils } from '@app/core/utils'
 import { NotFoundError, SyntaxError } from '@app/core/errors'
 
-export interface CreateCommandOptions {
-  name: string
-  templatesFolder: string
-  encoding: BufferEncoding
-  replaceNames?: string[]
-  replaceContent?: string[]
-  brackets: boolean
-}
+import {
+  CreateCommandOptions,
+  ParsedNamesToReplace,
+  ReplaceContentObject,
+  CreateCommandResult,
+} from './Types'
 
-export interface ParsedNamesToReplace {
-  key: string
-  name: string
-}
-
-export interface ReplaceContentObject {
-  [key: string]: string
-}
-
-export type ResultTypes = 'file' | 'folder'
-
-export interface CreateCommandResult {
-  sourcePath: string
-  destinationPath: string
-  type: ResultTypes
-}
+import { CREATE_COMMAND_DEFAULT_OPTIONS } from './Defaults'
 
 export class CreateCommand {
   readonly options: CreateCommandOptions
   readonly source: string
   readonly destination: string
-
-  public getDefaultOptions(): CreateCommandOptions {
-    return {
-      name: '',
-      templatesFolder: '__file-templates__',
-      encoding: 'utf-8',
-      replaceNames: undefined,
-      replaceContent: undefined,
-      brackets: true,
-    }
-  }
 
   constructor(
     source: string,
@@ -53,7 +25,7 @@ export class CreateCommand {
   ) {
     this.source = source
     this.destination = destination
-    this.options = options || this.getDefaultOptions()
+    this.options = options || CREATE_COMMAND_DEFAULT_OPTIONS
   }
 
   private _getTemplatesFolderPath(): string {
