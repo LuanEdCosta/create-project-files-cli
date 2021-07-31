@@ -1,6 +1,19 @@
 import chalk from 'chalk'
 
-import { CreateCommand, CreateCommandOptions } from '@app/core/commands'
+import {
+  CreateCommand,
+  CreateCommandResult,
+  CreateCommandOptions,
+} from '@app/core/commands'
+
+export const showResultsInConsole = (results: CreateCommandResult[]) => {
+  results.forEach((result) => {
+    const isFile = result.type === 'file'
+    const typeText = isFile ? 'File' : 'Folder'
+    const message = `${typeText} created at ${result.destinationPath}`
+    console.log(chalk.green(message))
+  })
+}
 
 export const createCommandAction = (
   source: string,
@@ -8,11 +21,5 @@ export const createCommandAction = (
   options: CreateCommandOptions,
 ) => {
   const results = new CreateCommand(source, destination, options).run()
-
-  results.forEach((result) => {
-    const isFile = result.type === 'file'
-    const typeText = isFile ? 'File' : 'Folder'
-    const message = `${typeText} created at ${result.destinationPath}`
-    console.log(chalk.green(message))
-  })
+  showResultsInConsole(results)
 }
