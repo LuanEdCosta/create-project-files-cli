@@ -87,11 +87,12 @@ Display the help for a command or all commands.
 ## :hourglass: Coming Soon
 
 - Find files and folders in multiple template folders.
-- Create multiple files and folders with only one command
-- Ignore case when replacing the content of a file
-- Set an alias to a file or folder inside the templates folder
-- Create a config file to simplify the use of this library
-- Support for multiple languages
+- Create multiple files and folders with only one command.
+- Ignore case when replacing the content of a file.
+- Set an alias to a file or folder inside the templates folder.
+- Create a config file to simplify the use of this library.
+- Do not show success or error messages on console.
+- Add uuid or timestamp to file names.
 
 ## :handshake: Contributing
 

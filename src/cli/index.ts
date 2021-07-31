@@ -7,14 +7,11 @@ import { CreateCommand } from '@app/cli/commands'
 
 const packageJson = require('../../package.json')
 
-const program = new Command('cpf')
-
 try {
-  program
+  new Command('cpf')
     .version(packageJson?.version || 'Not Defined')
     .addCommand(CreateCommand)
-
-  program.parse(process.argv)
+    .parse(process.argv)
 } catch (e) {
   handleErrors(e)
 }
