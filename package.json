@@ -30,7 +30,7 @@
     "install:windows": "yarn build && yarn global add file:%INIT_CWD%",
     "install:unix": "yarn build && yarn global add file:$INIT_CWD",
     "check:files": "npm pack --dry-run",
-    "clean:tests": "rimraf __testing-folder__/*",
+    "clean:tests": "rimraf __testing__/*",
     "clean:lib": "rimraf lib",
     "clean:modules": "rimraf node_modules",
     "eslint:lint": "yarn eslint . --ext .js,.jsx,.ts,.tsx",
