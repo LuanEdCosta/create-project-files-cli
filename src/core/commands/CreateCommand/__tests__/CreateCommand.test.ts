@@ -2,10 +2,10 @@ import fs from 'fs'
 import path from 'path'
 import mockFs from 'mock-fs'
 
-import { CreateCommand } from './CreateCommand'
-import { NotFoundError, SyntaxError } from '../../errors'
-import { CREATE_COMMAND_DEFAULT_OPTIONS } from './Defaults'
-import { CreateCommandResult, CreateCommandOptions } from './Types'
+import { CreateCommand } from '../CreateCommand'
+import { NotFoundError, SyntaxError } from '../../../errors'
+import { CREATE_COMMAND_DEFAULT_OPTIONS } from '../Defaults'
+import { CreateCommandResult, CreateCommandOptions } from '../Types'
 
 describe('CreateCommand tests', () => {
   const testingFolder = '__testing__'
