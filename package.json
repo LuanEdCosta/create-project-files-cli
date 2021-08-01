@@ -23,10 +23,8 @@
   },
   "scripts": {
     "test": "jest",
-    "test:src": "jest src",
-    "test:cli": "jest __tests__",
     "start": "node lib/cli/index.js",
-    "build": "yarn babel src --extensions \".js,.ts\" --out-dir lib --copy-files --no-copy-ignored",
+    "build": "yarn babel src --extensions \".js,.ts\" --out-dir lib --copy-files --no-copy-ignored --ignore \"src/**/*.spec.ts\",\"src/**/*.test.ts\",\"src/**/*.spec.js\",\"src/**/*.test.js\"",
     "dev": "ts-node -r tsconfig-paths/register src/cli/index.ts",
     "prepare": "yarn clean:lib && yarn build",
     "install:windows": "yarn build && yarn global add file:%INIT_CWD%",

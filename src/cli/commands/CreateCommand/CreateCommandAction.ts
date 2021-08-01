@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import {
   CreateCommand,
   CreateCommandResult,
-  CreateCommandOptions,
+  CreateCommandOptionsWithDefaults,
 } from '@app/core/commands'
 
 export const showResultsInConsole = (results: CreateCommandResult[]) => {
@@ -18,7 +18,7 @@ export const showResultsInConsole = (results: CreateCommandResult[]) => {
 export const createCommandAction = (
   source: string,
   destination: string,
-  options: CreateCommandOptions,
+  options: CreateCommandOptionsWithDefaults,
 ) => {
   const results = new CreateCommand(source, destination, options).run()
   showResultsInConsole(results)

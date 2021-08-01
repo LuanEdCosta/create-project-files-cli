@@ -5,6 +5,7 @@ import { TextUtils } from '@app/core/utils'
 import { NotFoundError, SyntaxError } from '@app/core/errors'
 
 import {
+  CreateCommandOptionsWithDefaults,
   CreateCommandOptions,
   ParsedNamesToReplace,
   ReplaceContentObject,
@@ -14,18 +15,18 @@ import {
 import { CREATE_COMMAND_DEFAULT_OPTIONS } from './Defaults'
 
 export class CreateCommand {
-  readonly options: CreateCommandOptions
   readonly source: string
   readonly destination: string
+  readonly options: CreateCommandOptionsWithDefaults
 
   constructor(
     source: string,
     destination: string,
-    options?: CreateCommandOptions,
+    options: CreateCommandOptions = CREATE_COMMAND_DEFAULT_OPTIONS,
   ) {
     this.source = source
     this.destination = destination
-    this.options = options || CREATE_COMMAND_DEFAULT_OPTIONS
+    this.options = { ...CREATE_COMMAND_DEFAULT_OPTIONS, ...options }
   }
 
   private _getTemplatesFolderPath(): string {
@@ -72,11 +73,12 @@ export class CreateCommand {
   }
 
   private _throwNamesToReplaceIncorrectlyFormatted(
-    parsedNamesToReplace: ParsedNamesToReplace[],
+    parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ) {
-    const isReplaceNamesOptionIncorrectly = parsedNamesToReplace?.some(
-      ({ key, name: value }) => !key || !value,
-    )
+    const isReplaceNamesOptionIncorrectly = parsedNamesToReplace
+      ? parsedNamesToReplace.some(({ key, name }) => !key || !name)
+      : false
+
     if (isReplaceNamesOptionIncorrectly) {
       throw new SyntaxError({
         message: 'The --replace-names (-rn) option is incorrectly formatted',
@@ -101,6 +103,7 @@ export class CreateCommand {
     const isReplaceContentOptionIncorrectly = Object.entries(
       replaceContentObject,
     ).some(([key, text]) => !key || !text)
+
     if (isReplaceContentOptionIncorrectly) {
       throw new SyntaxError({
         message: 'The --replace-content (-rc) option is incorrectly formatted',
@@ -177,7 +180,7 @@ export class CreateCommand {
     this._throwSourcePathNotFound(sourcePath)
 
     const parsedNamesToReplace = this._getParsedNamesToReplace()
-    this._throwNamesToReplaceIncorrectlyFormatted(parsedNamesToReplace || [])
+    this._throwNamesToReplaceIncorrectlyFormatted(parsedNamesToReplace)
 
     const replaceContentObject = this._getReplaceContentObject()
     this._throwReplaceContentOptionIncorrectlyFormatted(replaceContentObject)
@@ -250,6 +253,6 @@ export class CreateCommand {
       ]
     }
 
-    return []
+    throw new Error('The source can only be a file or a folder')
   }
 }

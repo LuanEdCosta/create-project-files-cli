@@ -1,2 +1,2 @@
-export * from './NotFoundError'
-export * from './SyntaxError'
+export { NotFoundError } from './NotFoundError'
+export { SyntaxError, SyntaxErrorOptions } from './SyntaxError'

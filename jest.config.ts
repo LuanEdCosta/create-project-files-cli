@@ -4,4 +4,5 @@ export default {
   collectCoverage: true,
   coverageProvider: 'v8',
   coverageDirectory: 'coverage',
+  modulePathIgnorePatterns: ['node_modules', 'lib'],
 }

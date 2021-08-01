@@ -1,9 +1,16 @@
 export interface CreateCommandOptions {
+  name?: string
+  templatesFolder?: string
+  encoding?: BufferEncoding
+  replaceNames?: string[]
+  replaceContent?: string[]
+  brackets?: boolean
+}
+
+export interface CreateCommandOptionsWithDefaults extends CreateCommandOptions {
   name: string
   templatesFolder: string
   encoding: BufferEncoding
-  replaceNames?: string[]
-  replaceContent?: string[]
   brackets: boolean
 }
 
