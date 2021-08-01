@@ -41,7 +41,7 @@ There are many ways to contribute with this project, but we can divide it in two
 ## How to Test Changes
 
 - Create the `__file-templates__` folder to store the template files and folders.
-- Create a folder called `__testing-folder__` to store the created files.
+- Create a folder called `__testing__` to store the created files.
 - Open a terminal instance and run the library locally. _See scripts below to know how to do that_.
 
 ## Helpful Scripts

@@ -19,36 +19,40 @@
   },
   "main": "lib/index.js",
   "bin": {
-    "cpf": "./lib/index.js"
+    "cpf": "./lib/cli/index.js"
   },
   "scripts": {
-    "dev": "node -r ts-node/register src/index.ts",
-    "start": "node lib/index.js",
-    "build": "tsc",
     "test": "jest",
+    "start": "node lib/cli/index.js",
+    "build": "yarn babel src --extensions \".js,.ts\" --out-dir lib --copy-files --no-copy-ignored --ignore \"src/**/*.spec.ts\",\"src/**/*.test.ts\",\"src/**/*.spec.js\",\"src/**/*.test.js\"",
+    "dev": "ts-node -r tsconfig-paths/register src/cli/index.ts",
     "prepare": "yarn clean:lib && yarn build",
     "install:windows": "yarn build && yarn global add file:%INIT_CWD%",
     "install:unix": "yarn build && yarn global add file:$INIT_CWD",
     "check:files": "npm pack --dry-run",
-    "clean:tests": "rimraf __testing-folder__/*",
+    "clean:tests": "rimraf __testing__/*",
     "clean:lib": "rimraf lib",
+    "clean:modules": "rimraf node_modules",
     "eslint:lint": "yarn eslint . --ext .js,.jsx,.ts,.tsx",
-    "eslint:fix": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "create:templates": "node scripts/CreateTestTemplates.js"
+    "eslint:fix": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "chalk": "^4.1.1",
     "commander": "^7.2.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.14.8",
     "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
     "@babel/preset-env": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
     "@types/jest": "^26.0.23",
+    "@types/mock-fs": "^4.13.1",
     "@types/node": "^15.12.1",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "babel-jest": "^27.0.2",
+    "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
@@ -58,9 +62,11 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0",
     "jest": "^27.0.4",
+    "mock-fs": "^5.0.0",
     "prettier": "^2.3.1",
     "rimraf": "^3.0.2",
     "ts-node-dev": "^1.1.6",
+    "tsconfig-paths": "^3.10.1",
     "typescript": "^4.3.2"
   },
   "files": [
