@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-import { NotFoundError, SyntaxError } from '@app/core/errors'
+import { NotFoundError, SyntaxError } from '../../core/errors'
 
 export const handleErrors = (error: Error) => {
   if (error instanceof SyntaxError) {

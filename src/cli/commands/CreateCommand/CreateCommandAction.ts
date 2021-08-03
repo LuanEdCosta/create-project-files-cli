@@ -1,7 +1,7 @@
 import {
   CreateCommand,
   CreateCommandOptionsWithDefaults,
-} from '@app/core/commands'
+} from '../../../core/commands'
 
 import { logResultsInTerminal } from './LogResultsInTerminal'
 

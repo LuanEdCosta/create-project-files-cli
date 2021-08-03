@@ -2,8 +2,8 @@
 
 import { Command } from 'commander'
 
-import { handleErrors } from '@app/cli/errors'
-import { CreateCommand } from '@app/cli/commands'
+import { handleErrors } from './errors'
+import { CreateCommand } from './commands'
 
 const packageJson = require('../../package.json')
 
