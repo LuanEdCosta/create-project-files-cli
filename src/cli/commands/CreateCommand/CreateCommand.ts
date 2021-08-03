@@ -2,9 +2,8 @@
 
 import { Command } from 'commander'
 
-import { CREATE_COMMAND_DEFAULT_OPTIONS } from '@app/core/commands'
-
 import { createCommandAction } from './CreateCommandAction'
+import { CREATE_COMMAND_DEFAULT_OPTIONS } from '../../../core/commands'
 
 export const CreateCommand = new Command('create')
   .arguments('<source> <destination>')

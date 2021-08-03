@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-import { CreateCommandResult } from '@app/core/commands'
+import { CreateCommandResult } from '../../../core/commands'
 
 export const logResultsInTerminal = (results: CreateCommandResult[]) => {
   results.forEach((result) => {

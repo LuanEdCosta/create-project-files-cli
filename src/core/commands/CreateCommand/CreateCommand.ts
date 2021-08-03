@@ -1,9 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 
-import { TextUtils } from '@app/core/utils'
-import { NotFoundError, SyntaxError } from '@app/core/errors'
-
 import {
   CreateCommandOptionsWithDefaults,
   CreateCommandOptions,
@@ -12,6 +9,8 @@ import {
   CreateCommandResult,
 } from './Types'
 
+import { TextUtils } from '../../utils'
+import { NotFoundError, SyntaxError } from '../../errors'
 import { CREATE_COMMAND_DEFAULT_OPTIONS } from './Defaults'
 
 export class CreateCommand {
