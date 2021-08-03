@@ -78,7 +78,7 @@ Display the help for a command or all commands.
 
 ## :computer: Using in Code
 
-You to use the library in code if your using the version **1.1.0** or greater. You can **install as dev dependency**, create a javascript file, and do something like the example below:
+You can use the library in code if your using the version **1.1.0** or greater. You can **install as dev dependency**, create a javascript file, and do something like the example below:
 
 ```js
 const { CreateCommand } = require('create-project-files-cli')
