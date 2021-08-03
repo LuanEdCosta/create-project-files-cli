@@ -30,13 +30,9 @@ Create your project files faster using this CLI. You can create file templates a
 
 **Installing Globally**
 
-With yarn
-
 ```
 yarn global add create-project-files-cli
 ```
-
-With npm
 
 ```
 npm i -g create-project-files-cli
@@ -44,13 +40,9 @@ npm i -g create-project-files-cli
 
 **Installing as Dev Dependency**
 
-With yarn
-
 ```
 yarn add -D create-project-files-cli
 ```
-
-With npm
 
 ```
 npm i -D create-project-files-cli
@@ -84,15 +76,33 @@ Creates a file or folder based on the `<source> at <destination>`.
 
 Display the help for a command or all commands.
 
+## :computer: Using in Code
+
+You to use the library in code if your using the version **1.1.0** or greater. You can **install as dev dependency**, create a javascript file, and do something like the example below:
+
+```js
+const { CreateCommand } = require('create-project-files-cli')
+
+const command = new CreateCommand('text.txt', '.', {
+  // Options ...
+})
+
+const results = command.run()
+
+console.log(results)
+```
+
 ## :hourglass: Coming Soon
 
-- Find files and folders in multiple template folders.
+- Support for multiple template folders.
 - Create multiple files and folders with only one command.
 - Ignore case when replacing the content of a file.
 - Set an alias to a file or folder inside the templates folder.
-- Create a config file to simplify the use of this library.
-- Do not show success or error messages on console.
+- Config file to simplify the use of this library.
+- --silent option to run the CLI silently.
 - Add uuid or timestamp to file names.
+- Create destination folder if not exists.
+- --force option to delete existing files and folders to create the new ones.
 
 ## :handshake: Contributing
 
