@@ -3,9 +3,13 @@ import path from 'path'
 import mockFs from 'mock-fs'
 
 import { CreateCommand } from '../CreateCommand'
-import { NotFoundError, SyntaxError } from '../../../errors'
 import { CREATE_COMMAND_DEFAULT_OPTIONS } from '../Defaults'
 import { CreateCommandResult, CreateCommandOptions } from '../Types'
+import {
+  NotFoundError,
+  SyntaxError,
+  MisusedOptionsError,
+} from '../../../errors'
 
 describe('CreateCommand tests', () => {
   const testingFolder = '__testing__'
@@ -406,5 +410,14 @@ describe('CreateCommand tests', () => {
 
     const command = new CreateCommand('symLink', testingFolder)
     expect(command.run.bind(command)).toThrowError(Error)
+  })
+
+  it('should throw MisusedOptionsError if uses the name option together with the replaceNames option', () => {
+    const command = new CreateCommand('text.txt', testingFolder, {
+      name: 'file.txt',
+      replaceNames: ['text=documentation'],
+    })
+
+    expect(command.run.bind(command)).toThrowError(MisusedOptionsError)
   })
 })
