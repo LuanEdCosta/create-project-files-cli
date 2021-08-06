@@ -10,8 +10,8 @@ import {
 } from './Types'
 
 import { TextUtils } from '../../utils'
-import { NotFoundError, SyntaxError } from '../../errors'
 import { CREATE_COMMAND_DEFAULT_OPTIONS } from './Defaults'
+import { NotFoundError, SyntaxError, MisusedOptionsError } from '../../errors'
 
 export class CreateCommand {
   readonly source: string
@@ -171,7 +171,24 @@ export class CreateCommand {
       : fileContent
   }
 
+  private _throwMisusedOptionsError() {
+    const hasNameOption = !!this.options.name
+    const hasReplaceNamesOption = !!this.options.replaceNames
+    if (hasNameOption && hasReplaceNamesOption) {
+      throw new MisusedOptionsError({
+        message:
+          'The --name option cannot be used together with the --replace-names option to prevent unexpected results',
+        options: {
+          name: this.options.name,
+          replaceNames: this.options.replaceNames,
+        },
+      })
+    }
+  }
+
   public run(): CreateCommandResult[] {
+    this._throwMisusedOptionsError()
+
     const templatesFolderPath = this._getTemplatesFolderPath()
     this._throwTemplatesFolderNotFound(templatesFolderPath)
 
