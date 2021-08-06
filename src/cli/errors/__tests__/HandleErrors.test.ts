@@ -1,7 +1,11 @@
 import chalk from 'chalk'
 
 import { handleErrors } from '../HandleErrors'
-import { NotFoundError, SyntaxError } from '../../../core/errors'
+import {
+  NotFoundError,
+  SyntaxError,
+  MisusedOptionsError,
+} from '../../../core/errors'
 
 describe('HandleErrors tests', () => {
   const log = console.log
@@ -51,6 +55,22 @@ describe('HandleErrors tests', () => {
     expect(console.log).toHaveBeenNthCalledWith(
       7,
       chalk.redBright(syntaxError.received),
+    )
+  })
+
+  it('should log the MisusedOptionsError message in the terminal', () => {
+    const misusedOptionsError = new MisusedOptionsError({
+      message:
+        'The --something option cannot be used together with the --random option',
+      options: {
+        something: 'something',
+        random: 'random',
+      },
+    })
+
+    handleErrors(misusedOptionsError)
+    expect(console.log).toHaveBeenCalledWith(
+      chalk.red(misusedOptionsError.message),
     )
   })
 })

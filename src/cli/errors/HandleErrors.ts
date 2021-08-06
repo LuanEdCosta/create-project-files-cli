@@ -1,6 +1,10 @@
 import chalk from 'chalk'
 
-import { NotFoundError, SyntaxError } from '../../core/errors'
+import {
+  NotFoundError,
+  SyntaxError,
+  MisusedOptionsError,
+} from '../../core/errors'
 
 export const handleErrors = (error: Error) => {
   if (error instanceof SyntaxError) {
@@ -17,6 +21,9 @@ export const handleErrors = (error: Error) => {
   } else if (error instanceof NotFoundError) {
     const notFoundError = error as NotFoundError
     console.log(chalk.red(notFoundError.message))
+  } else if (error instanceof MisusedOptionsError) {
+    const misusedOptionsError = error as MisusedOptionsError
+    console.log(chalk.red(misusedOptionsError.message))
   } else {
     console.log(chalk.red(error.message))
   }
