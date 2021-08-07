@@ -2,6 +2,12 @@
 
 This file documents all version releases.
 
+## 1.1.1 - 2021-08-06
+
+**Fixes**
+
+- Throw MisusedError error when the --name and --replace-names options are used together to prevent unexpected results, because the --name option overrides the --replace-names option.
+
 ## 1.1.0 - 2021-08-02
 
 **Fixes**
