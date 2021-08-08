@@ -70,6 +70,11 @@ describe('CreateCommand tests', () => {
           'info.txt': 'Some info',
           'testing.txt': 'File to test something',
         },
+        nested: {
+          folder: {
+            'file.txt': 'File inside nested folder',
+          },
+        },
         empty: {},
       },
       [customTemplatesFolder]: {
@@ -125,6 +130,38 @@ describe('CreateCommand tests', () => {
       getCreateCommandResult('folder', 'docs', 'docs'),
       getCreateCommandResult('file', 'docs/info.txt', 'docs/info.txt'),
       getCreateCommandResult('file', 'docs/testing.txt', 'docs/testing.txt'),
+    ])
+  })
+
+  it('should create a folder with another folder inside', () => {
+    const results = new CreateCommand('nested', testingFolder).run()
+    expect(results).toHaveLength(3)
+    expect(results).toEqual([
+      getCreateCommandResult('folder', 'nested', 'nested'),
+      getCreateCommandResult('folder', 'nested/folder', 'nested/folder'),
+      getCreateCommandResult(
+        'file',
+        'nested/folder/file.txt',
+        'nested/folder/file.txt',
+      ),
+    ])
+  })
+
+  it('should create a folder and rename the nested folder', () => {
+    const results = new CreateCommand('nested', testingFolder, {
+      replaceNames: ['folder=content'],
+      brackets: false,
+    }).run()
+
+    expect(results).toHaveLength(3)
+    expect(results).toEqual([
+      getCreateCommandResult('folder', 'nested', 'nested'),
+      getCreateCommandResult('folder', 'nested/folder', 'nested/content'),
+      getCreateCommandResult(
+        'file',
+        'nested/folder/file.txt',
+        'nested/content/file.txt',
+      ),
     ])
   })
 
@@ -315,6 +352,26 @@ describe('CreateCommand tests', () => {
     expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'file_file.txt', 'file_file.txt'),
+    ])
+  })
+
+  it('should replace the content of a file inside nested folder', () => {
+    const results = new CreateCommand('nested', testingFolder, {
+      replaceContent: ['File=The text file'],
+    }).run()
+
+    const fileContent = readFromTestingFolder('nested/folder/file.txt')
+    expect(fileContent).toBe('The text file inside nested folder')
+
+    expect(results).toHaveLength(3)
+    expect(results).toEqual([
+      getCreateCommandResult('folder', 'nested', 'nested'),
+      getCreateCommandResult('folder', 'nested/folder', 'nested/folder'),
+      getCreateCommandResult(
+        'file',
+        'nested/folder/file.txt',
+        'nested/folder/file.txt',
+      ),
     ])
   })
 

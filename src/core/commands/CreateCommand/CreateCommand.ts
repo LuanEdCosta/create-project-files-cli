@@ -18,6 +18,8 @@ export class CreateCommand {
   readonly destination: string
   readonly options: CreateCommandOptionsWithDefaults
 
+  private _createCommandResults: CreateCommandResult[]
+
   constructor(
     source: string,
     destination: string,
@@ -26,6 +28,11 @@ export class CreateCommand {
     this.source = source
     this.destination = destination
     this.options = { ...CREATE_COMMAND_DEFAULT_OPTIONS, ...options }
+    this._createCommandResults = []
+  }
+
+  private _addCreateCommandResult(createCommandResult: CreateCommandResult) {
+    this._createCommandResults.push(createCommandResult)
   }
 
   private _getTemplatesFolderPath(): string {
@@ -112,11 +119,8 @@ export class CreateCommand {
     }
   }
 
-  private _throwEmptySourceFolder(
-    sourcePath: string,
-    folderFileNames: string[],
-  ) {
-    if (folderFileNames.length === 0) {
+  private _throwEmptySourceFolder(sourcePath: string) {
+    if (fs.readdirSync(sourcePath).length === 0) {
       throw new NotFoundError(sourcePath, `No files found at ${sourcePath}`)
     }
   }
@@ -186,6 +190,64 @@ export class CreateCommand {
     }
   }
 
+  private _createFolderRecursively(
+    sourcePath: string,
+    destinationPath: string,
+    replaceContentObject: ReplaceContentObject,
+    parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
+    canReplaceContent: boolean,
+  ) {
+    const folderContentItems = fs.readdirSync(sourcePath)
+
+    folderContentItems.forEach((itemName) => {
+      const itemPath = path.resolve(sourcePath, itemName)
+
+      const itemStatus = fs.lstatSync(itemPath)
+      const isFolderItemDirectory = itemStatus.isDirectory()
+      const isFolderItemFile = itemStatus.isFile()
+
+      const replacedName = this._getReplacedName(itemName, parsedNamesToReplace)
+
+      if (isFolderItemFile) {
+        const fileContent = this._getFileContent(
+          itemPath,
+          replaceContentObject,
+          canReplaceContent,
+        )
+
+        const fileDestinationPath = path.resolve(destinationPath, replacedName)
+
+        fs.writeFileSync(fileDestinationPath, fileContent)
+
+        this._addCreateCommandResult({
+          type: 'file',
+          sourcePath: itemPath,
+          destinationPath: fileDestinationPath,
+        })
+      } else if (isFolderItemDirectory) {
+        const nestedFolderPath = path.resolve(destinationPath, replacedName)
+
+        fs.mkdirSync(nestedFolderPath)
+
+        this._addCreateCommandResult({
+          type: 'folder',
+          sourcePath: itemPath,
+          destinationPath: nestedFolderPath,
+        })
+
+        this._createFolderRecursively(
+          itemPath,
+          nestedFolderPath,
+          replaceContentObject,
+          parsedNamesToReplace,
+          canReplaceContent,
+        )
+      }
+
+      // * Ignore if is not a file or directory
+    })
+  }
+
   public run(): CreateCommandResult[] {
     this._throwMisusedOptionsError()
 
@@ -203,55 +265,29 @@ export class CreateCommand {
     const canReplaceContent = Object.keys(replaceContentObject).length > 0
 
     const sourceType = this._getSourceType(sourcePath)
+    const destinationPath = this._getDestinationPath(parsedNamesToReplace)
 
     if (sourceType.isDirectory) {
-      const folderFileNames = fs.readdirSync(sourcePath)
-      this._throwEmptySourceFolder(sourcePath, folderFileNames)
+      this._throwEmptySourceFolder(sourcePath)
 
-      const destinationPath = this._getDestinationPath(parsedNamesToReplace)
       fs.mkdirSync(destinationPath)
 
-      const createCommandResults: CreateCommandResult[] = []
-
-      createCommandResults.push({
+      this._addCreateCommandResult({
         sourcePath,
         destinationPath,
         type: 'folder',
       })
 
-      folderFileNames.forEach((fileName) => {
-        const filePath = path.resolve(sourcePath, fileName)
+      this._createFolderRecursively(
+        sourcePath,
+        destinationPath,
+        replaceContentObject,
+        parsedNamesToReplace,
+        canReplaceContent,
+      )
 
-        const fileContent = this._getFileContent(
-          filePath,
-          replaceContentObject,
-          canReplaceContent,
-        )
-
-        const replacedFileName = this._getReplacedName(
-          fileName,
-          parsedNamesToReplace,
-        )
-
-        const fileDestinationPath = path.resolve(
-          process.cwd(),
-          destinationPath,
-          replacedFileName,
-        )
-
-        fs.writeFileSync(fileDestinationPath, fileContent)
-
-        createCommandResults.push({
-          type: 'file',
-          sourcePath: filePath,
-          destinationPath: fileDestinationPath,
-        })
-      })
-
-      return createCommandResults
+      return this._createCommandResults
     } else if (sourceType.isFile) {
-      const destinationPath = this._getDestinationPath(parsedNamesToReplace)
-
       const fileContent = this._getFileContent(
         sourcePath,
         replaceContentObject,
@@ -260,13 +296,13 @@ export class CreateCommand {
 
       fs.writeFileSync(destinationPath, fileContent)
 
-      return [
-        {
-          sourcePath,
-          destinationPath,
-          type: 'file',
-        },
-      ]
+      this._addCreateCommandResult({
+        sourcePath,
+        destinationPath,
+        type: 'file',
+      })
+
+      return this._createCommandResults
     }
 
     throw new Error('The source can only be a file or a folder')
