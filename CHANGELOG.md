@@ -2,6 +2,12 @@
 
 This file documents all version releases.
 
+## 1.1.2 - 2021-08-08
+
+**Fixes**
+
+- Make possible to create a folder that contains nested folders
+
 ## 1.1.1 - 2021-08-06
 
 **Fixes**
