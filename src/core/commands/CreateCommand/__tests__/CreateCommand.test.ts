@@ -56,6 +56,13 @@ describe('CreateCommand tests', () => {
         'file_file.txt': 'This file is a file',
         '[file].txt': 'A file with brackets in the name',
         '[First]Of[Second].txt': '123456',
+        '[({.+^$})].txt': '[({.+^$})]',
+        'folder_[({.+^$})]': {
+          'file.txt': '[({.+^$})]',
+        },
+        '[({.+^$})]': {
+          '[({.+^$})].txt': '[({.+^$})]',
+        },
         '[folderName]': {
           '[fileName].txt': 'Replace the names',
         },
@@ -117,7 +124,6 @@ describe('CreateCommand tests', () => {
 
   it('should create a text.txt file', () => {
     const results = new CreateCommand('text.txt', testingFolder).run()
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'text.txt', 'text.txt'),
     ])
@@ -125,7 +131,6 @@ describe('CreateCommand tests', () => {
 
   it('should create a docs folder', () => {
     const results = new CreateCommand('docs', testingFolder).run()
-    expect(results).toHaveLength(3)
     expect(results).toEqual([
       getCreateCommandResult('folder', 'docs', 'docs'),
       getCreateCommandResult('file', 'docs/info.txt', 'docs/info.txt'),
@@ -135,7 +140,6 @@ describe('CreateCommand tests', () => {
 
   it('should create a folder with another folder inside', () => {
     const results = new CreateCommand('nested', testingFolder).run()
-    expect(results).toHaveLength(3)
     expect(results).toEqual([
       getCreateCommandResult('folder', 'nested', 'nested'),
       getCreateCommandResult('folder', 'nested/folder', 'nested/folder'),
@@ -153,7 +157,6 @@ describe('CreateCommand tests', () => {
       brackets: false,
     }).run()
 
-    expect(results).toHaveLength(3)
     expect(results).toEqual([
       getCreateCommandResult('folder', 'nested', 'nested'),
       getCreateCommandResult('folder', 'nested/folder', 'nested/content'),
@@ -170,7 +173,6 @@ describe('CreateCommand tests', () => {
       name: 'customName.txt',
     }).run()
 
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'text.txt', 'customName.txt'),
     ])
@@ -181,7 +183,6 @@ describe('CreateCommand tests', () => {
       name: 'folder',
     }).run()
 
-    expect(results).toHaveLength(3)
     expect(results).toEqual([
       getCreateCommandResult('folder', 'docs', 'folder'),
       getCreateCommandResult('file', 'docs/info.txt', 'folder/info.txt'),
@@ -194,7 +195,6 @@ describe('CreateCommand tests', () => {
       templatesFolder: customTemplatesFolder,
     }).run()
 
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'file.txt', 'file.txt', true),
     ])
@@ -209,7 +209,6 @@ describe('CreateCommand tests', () => {
     const isBase64Valid = validateBase64(fileContent)
 
     expect(isBase64Valid).toBe(true)
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'text.txt', 'text.txt'),
     ])
@@ -231,7 +230,6 @@ describe('CreateCommand tests', () => {
     const isSecondFileBase64Valid = validateBase64(secondFileContent)
     expect(isSecondFileBase64Valid).toBe(true)
 
-    expect(results).toHaveLength(3)
     expect(results).toEqual([
       getCreateCommandResult('folder', 'docs', 'docs'),
       getCreateCommandResult('file', 'docs/info.txt', 'docs/info.txt'),
@@ -244,7 +242,6 @@ describe('CreateCommand tests', () => {
       replaceNames: ['file=password'],
     }).run()
 
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', '[file].txt', 'password.txt'),
     ])
@@ -255,7 +252,6 @@ describe('CreateCommand tests', () => {
       replaceNames: ['First=History', 'Second=Cats'],
     }).run()
 
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult(
         'file',
@@ -271,9 +267,19 @@ describe('CreateCommand tests', () => {
       brackets: false,
     }).run()
 
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'text.txt', 'something.txt'),
+    ])
+  })
+
+  it('should replace regex chars in the file name', () => {
+    const results = new CreateCommand('[({.+^$})].txt', testingFolder, {
+      replaceNames: ['[({.+^$})]=text'],
+      brackets: false,
+    }).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult('file', '[({.+^$})].txt', `text.txt`),
     ])
   })
 
@@ -282,7 +288,6 @@ describe('CreateCommand tests', () => {
       replaceNames: ['folderName=photos'],
     }).run()
 
-    expect(results).toHaveLength(2)
     expect(results).toEqual([
       getCreateCommandResult('folder', '[folderName]', 'photos'),
       getCreateCommandResult(
@@ -299,10 +304,25 @@ describe('CreateCommand tests', () => {
       brackets: false,
     }).run()
 
-    expect(results).toHaveLength(2)
     expect(results).toEqual([
       getCreateCommandResult('folder', 'myFolder', 'math'),
       getCreateCommandResult('file', 'myFolder/myFile.txt', 'math/myFile.txt'),
+    ])
+  })
+
+  it('should replace regex chars in the folder name', () => {
+    const results = new CreateCommand('folder_[({.+^$})]', testingFolder, {
+      replaceNames: ['[({.+^$})]=folder'],
+      brackets: false,
+    }).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult('folder', 'folder_[({.+^$})]', `folder_folder`),
+      getCreateCommandResult(
+        'file',
+        'folder_[({.+^$})]/file.txt',
+        `folder_folder/file.txt`,
+      ),
     ])
   })
 
@@ -311,7 +331,6 @@ describe('CreateCommand tests', () => {
       replaceNames: ['component=Button'],
     }).run()
 
-    expect(results).toHaveLength(3)
     expect(results).toEqual([
       getCreateCommandResult('folder', '[component]', 'Button'),
       getCreateCommandResult(
@@ -327,6 +346,22 @@ describe('CreateCommand tests', () => {
     ])
   })
 
+  it('should replace regex chars in the folder name and in its files', () => {
+    const results = new CreateCommand('[({.+^$})]', testingFolder, {
+      replaceNames: ['[({.+^$})]=project'],
+      brackets: false,
+    }).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult('folder', '[({.+^$})]', `project`),
+      getCreateCommandResult(
+        'file',
+        '[({.+^$})]/[({.+^$})].txt',
+        `project/project.txt`,
+      ),
+    ])
+  })
+
   it('should replace a part of the content of a file', () => {
     const results = new CreateCommand('text.txt', testingFolder, {
       replaceContent: ['a file=not a simple text file'],
@@ -335,7 +370,6 @@ describe('CreateCommand tests', () => {
     const fileContent = readFromTestingFolder('text.txt')
     expect(fileContent).toBe('This is not a simple text file')
 
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'text.txt', 'text.txt'),
     ])
@@ -349,9 +383,43 @@ describe('CreateCommand tests', () => {
     const fileContent = readFromTestingFolder('file_file.txt')
     expect(fileContent).toBe('This cat is a cat')
 
-    expect(results).toHaveLength(1)
     expect(results).toEqual([
       getCreateCommandResult('file', 'file_file.txt', 'file_file.txt'),
+    ])
+  })
+
+  it('should replace all regex chars in the file content', () => {
+    const results = new CreateCommand('[({.+^$})].txt', testingFolder, {
+      replaceContent: ['[({.+^$})]=This is a text file'],
+    }).run()
+
+    const fileContent = readFromTestingFolder('[({.+^$})].txt')
+    expect(fileContent).toBe('This is a text file')
+
+    expect(results).toEqual([
+      getCreateCommandResult('file', '[({.+^$})].txt', '[({.+^$})].txt'),
+    ])
+  })
+
+  it('should replace regex chars of the content of a file that is inside a folder', () => {
+    const results = new CreateCommand('folder_[({.+^$})]', testingFolder, {
+      replaceContent: ['[({.+^$})]=New file content'],
+    }).run()
+
+    const fileContent = readFromTestingFolder('folder_[({.+^$})]/file.txt')
+    expect(fileContent).toBe('New file content')
+
+    expect(results).toEqual([
+      getCreateCommandResult(
+        'folder',
+        'folder_[({.+^$})]',
+        `folder_[({.+^$})]`,
+      ),
+      getCreateCommandResult(
+        'file',
+        'folder_[({.+^$})]/file.txt',
+        `folder_[({.+^$})]/file.txt`,
+      ),
     ])
   })
 
@@ -363,7 +431,6 @@ describe('CreateCommand tests', () => {
     const fileContent = readFromTestingFolder('nested/folder/file.txt')
     expect(fileContent).toBe('The text file inside nested folder')
 
-    expect(results).toHaveLength(3)
     expect(results).toEqual([
       getCreateCommandResult('folder', 'nested', 'nested'),
       getCreateCommandResult('folder', 'nested/folder', 'nested/folder'),
