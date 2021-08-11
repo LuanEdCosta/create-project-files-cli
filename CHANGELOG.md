@@ -2,6 +2,12 @@
 
 This file documents all version releases.
 
+## 1.1.3 - 2021-08-10
+
+**Fixes**
+
+- Make possible to use regex characters in the keys of the --replace-content option.
+
 ## 1.1.2 - 2021-08-08
 
 **Fixes**
