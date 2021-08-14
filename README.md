@@ -25,6 +25,7 @@ Create your project files faster using this CLI. You can create file templates a
 - :white_check_mark: You can add the template files in the version control system
 - :white_check_mark: Rename template files and folders
 - :white_check_mark: Replace text inside your template files
+- :white_check_mark: Use this library in JavaScript code
 
 ## :zap: Installation
 
@@ -108,7 +109,7 @@ console.log(results)
 
 :star: _This project can be better with your help_ :star:
 
-- If you find a bug or have an good idea :small_blue_diamond: [Create a new issue](https://github.com/LuanEdCosta/create-project-files-cli/issues)
+- If you find a bug or have a good idea :small_blue_diamond: [Create a new issue](https://github.com/LuanEdCosta/create-project-files-cli/issues)
 - If you want to contribute with code or documentation :small_blue_diamond: [Read the contributing guide](/CONTRIBUTING.md)
 
 ## :man: Author
