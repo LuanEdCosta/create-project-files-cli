@@ -2,6 +2,15 @@
 
 This file documents all version releases.
 
+## 1.1.4 - 2021-08-14
+
+**Fixes**
+
+- The create command runs normally when pass the --replace-content or the --replace-names options as booleans
+- Add options short syntax in the MisusedOptionsError message
+- Replace the content before changing the encoding
+- Fix the SyntaxError received param formatting
+
 ## 1.1.3 - 2021-08-10
 
 **Fixes**
