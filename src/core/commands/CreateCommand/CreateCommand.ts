@@ -72,7 +72,7 @@ export class CreateCommand {
   }
 
   private _getParsedNamesToReplace(): ParsedNamesToReplace[] | undefined {
-    return this.options.replaceNames?.map((keyAndName) => {
+    return this.options.replaceNames?.map?.((keyAndName) => {
       const [key, name] = keyAndName.split('=')
       return { key, name }
     })
@@ -81,22 +81,24 @@ export class CreateCommand {
   private _throwNamesToReplaceIncorrectlyFormatted(
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ) {
-    const isReplaceNamesOptionIncorrectly = parsedNamesToReplace
-      ? parsedNamesToReplace.some(({ key, name }) => !key || !name)
-      : false
+    if (!parsedNamesToReplace || !this.options.replaceNames) return
+
+    const isReplaceNamesOptionIncorrectly = parsedNamesToReplace.some(
+      ({ key, name }) => !key || !name,
+    )
 
     if (isReplaceNamesOptionIncorrectly) {
       throw new SyntaxError({
         message: 'The --replace-names (-rn) option is incorrectly formatted',
         expected: 'key1=name1 key2=name2',
-        received: `${this.options.replaceNames}`,
+        received: this.options.replaceNames.join(' '),
       })
     }
   }
 
   private _getReplaceContentObject(): ReplaceContentObject {
     const replaceContentObject: { [key: string]: string } = {}
-    this.options.replaceContent?.forEach((keyAndText) => {
+    this.options.replaceContent?.forEach?.((keyAndText) => {
       const [key, text] = keyAndText.split('=')
       replaceContentObject[key] = text
     })
@@ -110,11 +112,11 @@ export class CreateCommand {
       replaceContentObject,
     ).some(([key, text]) => !key || !text)
 
-    if (isReplaceContentOptionIncorrectly) {
+    if (this.options.replaceContent && isReplaceContentOptionIncorrectly) {
       throw new SyntaxError({
         message: 'The --replace-content (-rc) option is incorrectly formatted',
         expected: 'key1=text1 key2=text2',
-        received: `${this.options.replaceContent}`,
+        received: this.options.replaceContent.join(' '),
       })
     }
   }
@@ -181,7 +183,7 @@ export class CreateCommand {
     if (hasNameOption && hasReplaceNamesOption) {
       throw new MisusedOptionsError({
         message:
-          'The --name option cannot be used together with the --replace-names option to prevent unexpected results',
+          'The --name (-n) option cannot be used together with the --replace-names (-rn) option to prevent unexpected results',
         options: {
           name: this.options.name,
           replaceNames: this.options.replaceNames,

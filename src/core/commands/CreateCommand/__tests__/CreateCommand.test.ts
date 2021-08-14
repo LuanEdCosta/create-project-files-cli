@@ -362,6 +362,16 @@ describe('CreateCommand tests', () => {
     ])
   })
 
+  it('should work normally when pass the --replace-names as boolean', () => {
+    const results = new CreateCommand('text.txt', testingFolder, {
+      replaceNames: true as any,
+    }).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult('file', 'text.txt', 'text.txt'),
+    ])
+  })
+
   it('should replace a part of the content of a file', () => {
     const results = new CreateCommand('text.txt', testingFolder, {
       replaceContent: ['a file=not a simple text file'],
@@ -439,6 +449,16 @@ describe('CreateCommand tests', () => {
         'nested/folder/file.txt',
         'nested/folder/file.txt',
       ),
+    ])
+  })
+
+  it('should work normally when pass the --replace-content as boolean', () => {
+    const results = new CreateCommand('text.txt', testingFolder, {
+      replaceContent: true as any,
+    }).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult('file', 'text.txt', 'text.txt'),
     ])
   })
 
