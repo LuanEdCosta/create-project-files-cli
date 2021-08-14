@@ -6,8 +6,9 @@ import { CreateCommand } from '../CreateCommand'
 import { CREATE_COMMAND_DEFAULT_OPTIONS } from '../Defaults'
 import { CreateCommandResult, CreateCommandOptions } from '../Types'
 import {
-  NotFoundError,
   SyntaxError,
+  NotFoundError,
+  AlreadyExistsError,
   MisusedOptionsError,
 } from '../../../errors'
 
@@ -547,6 +548,18 @@ describe('CreateCommand tests', () => {
   it('should throw NotFoundError if do not find the source', () => {
     const command = new CreateCommand('NotExistingFile.txt', testingFolder)
     expect(command.run.bind(command)).toThrowError(NotFoundError)
+  })
+
+  it('should throw AlreadyExistsError if the file already exists', () => {
+    new CreateCommand('text.txt', testingFolder).run()
+    const otherCommand = new CreateCommand('text.txt', testingFolder)
+    expect(otherCommand.run.bind(otherCommand)).toThrowError(AlreadyExistsError)
+  })
+
+  it('should throw AlreadyExistsError if the folder already exists', () => {
+    new CreateCommand('docs', testingFolder).run()
+    const otherCommand = new CreateCommand('docs', testingFolder)
+    expect(otherCommand.run.bind(otherCommand)).toThrowError(AlreadyExistsError)
   })
 
   it('should throw SyntaxError if --replace-names is incorrectly formatted', () => {

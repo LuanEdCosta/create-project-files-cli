@@ -11,7 +11,12 @@ import {
 
 import { TextUtils } from '../../utils'
 import { CREATE_COMMAND_DEFAULT_OPTIONS } from './Defaults'
-import { NotFoundError, SyntaxError, MisusedOptionsError } from '../../errors'
+import {
+  NotFoundError,
+  SyntaxError,
+  MisusedOptionsError,
+  AlreadyExistsError,
+} from '../../errors'
 
 export class CreateCommand {
   readonly source: string
@@ -251,6 +256,16 @@ export class CreateCommand {
     })
   }
 
+  private _throwAlreadyExistsOnDestination(destinationPath: string) {
+    const alreadyExists = fs.existsSync(destinationPath)
+    if (alreadyExists) {
+      throw new AlreadyExistsError(
+        destinationPath,
+        `Cannot create ${destinationPath} because it already exists`,
+      )
+    }
+  }
+
   public run(): CreateCommandResult[] {
     this._throwMisusedOptionsError()
 
@@ -267,8 +282,10 @@ export class CreateCommand {
     this._throwReplaceContentOptionIncorrectlyFormatted(replaceContentObject)
     const canReplaceContent = Object.keys(replaceContentObject).length > 0
 
-    const sourceType = this._getSourceType(sourcePath)
     const destinationPath = this._getDestinationPath(parsedNamesToReplace)
+    this._throwAlreadyExistsOnDestination(destinationPath)
+
+    const sourceType = this._getSourceType(sourcePath)
 
     if (sourceType.isDirectory) {
       this._throwEmptySourceFolder(sourcePath)
