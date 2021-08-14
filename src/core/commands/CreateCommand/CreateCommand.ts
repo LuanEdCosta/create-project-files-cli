@@ -171,10 +171,11 @@ export class CreateCommand {
     replaceContentObject: ReplaceContentObject,
     canReplaceContent: boolean,
   ): string {
-    const fileContent = fs.readFileSync(filePath, this.options.encoding)
-    return canReplaceContent
+    const fileContent = fs.readFileSync(filePath, 'utf-8')
+    const newFileContent = canReplaceContent
       ? TextUtils.replaceTextPieces(fileContent, replaceContentObject)
       : fileContent
+    return Buffer.from(newFileContent).toString(this.options.encoding)
   }
 
   private _throwMisusedOptionsError() {
