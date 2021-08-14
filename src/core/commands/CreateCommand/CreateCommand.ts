@@ -183,7 +183,7 @@ export class CreateCommand {
     if (hasNameOption && hasReplaceNamesOption) {
       throw new MisusedOptionsError({
         message:
-          'The --name option cannot be used together with the --replace-names option to prevent unexpected results',
+          'The --name (-n) option cannot be used together with the --replace-names (-rn) option to prevent unexpected results',
         options: {
           name: this.options.name,
           replaceNames: this.options.replaceNames,
