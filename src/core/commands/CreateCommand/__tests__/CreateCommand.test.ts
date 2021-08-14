@@ -43,6 +43,15 @@ describe('CreateCommand tests', () => {
     })
   }
 
+  const readFromTemplatesFolder = (
+    pathSegment: string,
+    encoding: BufferEncoding = 'utf-8',
+  ): string => {
+    return fs.readFileSync(path.resolve(templatesFolder, pathSegment), {
+      encoding,
+    })
+  }
+
   const validateBase64 = (base64: string): boolean => {
     const regex =
       /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/
@@ -124,6 +133,11 @@ describe('CreateCommand tests', () => {
 
   it('should create a text.txt file', () => {
     const results = new CreateCommand('text.txt', testingFolder).run()
+
+    expect(readFromTemplatesFolder('text.txt')).toBe(
+      readFromTestingFolder('text.txt'),
+    )
+
     expect(results).toEqual([
       getCreateCommandResult('file', 'text.txt', 'text.txt'),
     ])
@@ -131,6 +145,15 @@ describe('CreateCommand tests', () => {
 
   it('should create a docs folder', () => {
     const results = new CreateCommand('docs', testingFolder).run()
+
+    expect(readFromTemplatesFolder('docs/info.txt')).toBe(
+      readFromTestingFolder('docs/info.txt'),
+    )
+
+    expect(readFromTemplatesFolder('docs/testing.txt')).toBe(
+      readFromTestingFolder('docs/testing.txt'),
+    )
+
     expect(results).toEqual([
       getCreateCommandResult('folder', 'docs', 'docs'),
       getCreateCommandResult('file', 'docs/info.txt', 'docs/info.txt'),
@@ -205,10 +228,30 @@ describe('CreateCommand tests', () => {
       encoding: 'base64',
     }).run()
 
-    const fileContent = readFromTestingFolder('text.txt', 'base64')
-    const isBase64Valid = validateBase64(fileContent)
+    const fileContent = readFromTestingFolder('text.txt')
+    expect(validateBase64(fileContent)).toBe(true)
 
-    expect(isBase64Valid).toBe(true)
+    expect(results).toEqual([
+      getCreateCommandResult('file', 'text.txt', 'text.txt'),
+    ])
+  })
+
+  it('should replace the file content and then change the encoding', () => {
+    const results = new CreateCommand('text.txt', testingFolder, {
+      encoding: 'base64',
+      replaceContent: ['file=custom file'],
+    }).run()
+
+    const oldFileContent = readFromTemplatesFolder('text.txt')
+    const newFileContent = readFromTestingFolder('text.txt')
+
+    expect(validateBase64(oldFileContent)).toBe(false)
+    expect(validateBase64(newFileContent)).toBe(true)
+
+    expect(Buffer.from(newFileContent, 'base64').toString('utf-8')).toBe(
+      oldFileContent.replace('file', 'custom file'),
+    )
+
     expect(results).toEqual([
       getCreateCommandResult('file', 'text.txt', 'text.txt'),
     ])
@@ -219,16 +262,48 @@ describe('CreateCommand tests', () => {
       encoding: 'base64',
     }).run()
 
-    const firstFileContent = readFromTestingFolder('docs/info.txt', 'base64')
-    const isFirstFileBase64Valid = validateBase64(firstFileContent)
-    expect(isFirstFileBase64Valid).toBe(true)
+    const firstFileContent = readFromTestingFolder('docs/info.txt')
+    expect(validateBase64(firstFileContent)).toBe(true)
 
-    const secondFileContent = readFromTestingFolder(
-      'docs/testing.txt',
-      'base64',
+    const secondFileContent = readFromTestingFolder('docs/testing.txt')
+    expect(validateBase64(secondFileContent)).toBe(true)
+
+    expect(results).toEqual([
+      getCreateCommandResult('folder', 'docs', 'docs'),
+      getCreateCommandResult('file', 'docs/info.txt', 'docs/info.txt'),
+      getCreateCommandResult('file', 'docs/testing.txt', 'docs/testing.txt'),
+    ])
+  })
+
+  it('should change the encoding of folder files after replace the content', () => {
+    const results = new CreateCommand('docs', testingFolder, {
+      encoding: 'base64',
+      replaceContent: ['info=information', 'something=the app'],
+    }).run()
+
+    const oldContent = {
+      firstFile: readFromTemplatesFolder('docs/info.txt'),
+      secondFile: readFromTemplatesFolder('docs/testing.txt'),
+    }
+
+    const newContent = {
+      firstFile: readFromTestingFolder('docs/info.txt'),
+      secondFile: readFromTestingFolder('docs/testing.txt'),
+    }
+
+    expect(validateBase64(oldContent.firstFile)).toBe(false)
+    expect(validateBase64(oldContent.secondFile)).toBe(false)
+
+    expect(validateBase64(newContent.firstFile)).toBe(true)
+    expect(validateBase64(newContent.secondFile)).toBe(true)
+
+    expect(Buffer.from(newContent.firstFile, 'base64').toString('utf-8')).toBe(
+      oldContent.firstFile.replace('info', 'information'),
     )
-    const isSecondFileBase64Valid = validateBase64(secondFileContent)
-    expect(isSecondFileBase64Valid).toBe(true)
+
+    expect(Buffer.from(newContent.secondFile, 'base64').toString('utf-8')).toBe(
+      oldContent.secondFile.replace('something', 'the app'),
+    )
 
     expect(results).toEqual([
       getCreateCommandResult('folder', 'docs', 'docs'),
