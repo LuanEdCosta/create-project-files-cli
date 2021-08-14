@@ -1,17 +1,18 @@
 export {
-  CREATE_COMMAND_DEFAULT_OPTIONS,
+  ResultTypes,
   CreateCommand,
-  CreateCommandOptions,
-  CreateCommandOptionsWithDefaults,
   CreateCommandResult,
   ParsedNamesToReplace,
   ReplaceContentObject,
-  ResultTypes,
+  CreateCommandOptions,
+  CREATE_COMMAND_DEFAULT_OPTIONS,
+  CreateCommandOptionsWithDefaults,
 } from './core/commands'
 
 export {
-  NotFoundError,
   SyntaxError,
+  NotFoundError,
+  AlreadyExistsError,
   SyntaxErrorOptions,
   MisusedOptionsError,
   MisusedOptionsErrorOptions,

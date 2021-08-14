@@ -2,8 +2,9 @@ import chalk from 'chalk'
 
 import { handleErrors } from '../HandleErrors'
 import {
-  NotFoundError,
   SyntaxError,
+  NotFoundError,
+  AlreadyExistsError,
   MisusedOptionsError,
 } from '../../../core/errors'
 
@@ -71,6 +72,17 @@ describe('HandleErrors tests', () => {
     handleErrors(misusedOptionsError)
     expect(console.log).toHaveBeenCalledWith(
       chalk.red(misusedOptionsError.message),
+    )
+  })
+
+  it('should log the AlreadyExistsError message in the terminal', () => {
+    const alreadyExistsError = new AlreadyExistsError(
+      'this/is/the/path',
+      'Cannot create this/is/the/path because it already exists',
+    )
+    handleErrors(alreadyExistsError)
+    expect(console.log).toHaveBeenCalledWith(
+      chalk.red(alreadyExistsError.message),
     )
   })
 })

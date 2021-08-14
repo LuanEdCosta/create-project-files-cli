@@ -4,6 +4,7 @@ import {
   NotFoundError,
   SyntaxError,
   MisusedOptionsError,
+  AlreadyExistsError,
 } from '../../core/errors'
 
 export const handleErrors = (error: Error) => {
@@ -21,6 +22,9 @@ export const handleErrors = (error: Error) => {
   } else if (error instanceof NotFoundError) {
     const notFoundError = error as NotFoundError
     console.log(chalk.red(notFoundError.message))
+  } else if (error instanceof AlreadyExistsError) {
+    const alreadyExistsError = error as AlreadyExistsError
+    console.log(chalk.red(alreadyExistsError.message))
   } else if (error instanceof MisusedOptionsError) {
     const misusedOptionsError = error as MisusedOptionsError
     console.log(chalk.red(misusedOptionsError.message))
