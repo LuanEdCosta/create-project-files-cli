@@ -72,7 +72,7 @@ export class CreateCommand {
   }
 
   private _getParsedNamesToReplace(): ParsedNamesToReplace[] | undefined {
-    return this.options.replaceNames?.map((keyAndName) => {
+    return this.options.replaceNames?.map?.((keyAndName) => {
       const [key, name] = keyAndName.split('=')
       return { key, name }
     })
@@ -98,7 +98,7 @@ export class CreateCommand {
 
   private _getReplaceContentObject(): ReplaceContentObject {
     const replaceContentObject: { [key: string]: string } = {}
-    this.options.replaceContent?.forEach((keyAndText) => {
+    this.options.replaceContent?.forEach?.((keyAndText) => {
       const [key, text] = keyAndText.split('=')
       replaceContentObject[key] = text
     })
