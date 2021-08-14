@@ -89,7 +89,7 @@ export class CreateCommand {
       throw new SyntaxError({
         message: 'The --replace-names (-rn) option is incorrectly formatted',
         expected: 'key1=name1 key2=name2',
-        received: `${this.options.replaceNames}`,
+        received: `${this.options.replaceNames?.join(' ')}`,
       })
     }
   }
@@ -114,7 +114,7 @@ export class CreateCommand {
       throw new SyntaxError({
         message: 'The --replace-content (-rc) option is incorrectly formatted',
         expected: 'key1=text1 key2=text2',
-        received: `${this.options.replaceContent}`,
+        received: `${this.options.replaceContent?.join(' ')}`,
       })
     }
   }
