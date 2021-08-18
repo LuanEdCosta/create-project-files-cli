@@ -2,6 +2,13 @@
 
 This file documents all version releases.
 
+## 1.1.5 - 2021-08-18
+
+**Fixes**
+
+- Update all dependencies (using commander.js 8.x.x now)
+- Throw AlreadyExistsError if you try to create a file or folder that already exists
+
 ## 1.1.4 - 2021-08-14
 
 **Fixes**
