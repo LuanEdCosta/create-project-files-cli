@@ -4,15 +4,23 @@
   <h1>Create Project Files CLI</h1>
 
   <div>
-    <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/luanedcosta/create-project-files-cli.svg">
-    <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/luanedcosta/create-project-files-cli.svg">
-    <img alt="Repository size" src="https://img.shields.io/github/repo-size/luanedcosta/create-project-files-cli.svg">
-    <img alt="GitHub" src="https://img.shields.io/github/license/luanedcosta/create-project-files-cli.svg">
+    <a href="https://www.npmjs.com/package/create-project-files-cli">
+      <img alt="Npm Version" src="https://img.shields.io/npm/v/create-project-files-cli">
+    </a>
+    <a href="https://www.npmjs.com/package/create-project-files-cli">
+      <img alt="Npm Downloads Per Week" src="https://img.shields.io/npm/dw/create-project-files-cli">
+    </a>
+    <a href="https://github.com/LuanEdCosta/create-project-files-cli/blob/master/LICENSE">
+      <img alt="GitHub License" src="https://img.shields.io/github/license/luanedcosta/create-project-files-cli.svg">
+    </a>
     <a href="https://github.com/luanedcosta/create-project-files-cli/commits/master">
-      <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/luanedcosta/create-project-files-cli.svg">
+      <img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/luanedcosta/create-project-files-cli.svg">
     </a>
     <a href="https://github.com/luanedcosta/create-project-files-cli/issues">
-      <img alt="Repository issues" src="https://img.shields.io/github/issues/luanedcosta/create-project-files-cli.svg">
+      <img alt="GitHub Issues" src="https://img.shields.io/github/issues/luanedcosta/create-project-files-cli.svg">
+    </a>
+    <a href="https://github.com/LuanEdCosta/create-project-files-cli/tree/master/src">
+      <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/luanedcosta/create-project-files-cli.svg">
     </a>
   </div>
 </div>
