@@ -72,14 +72,15 @@ Follow the steps below to learn how to use this library.
 
 Creates a file or folder based on the `<source> at <destination>`.
 
-| Option                              | Description                                                        | Example                                                |
-| ----------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------ |
-| -n, --name [name]                   | Changes the name of a file or folder.                              | cpf create text.txt src -n newName.txt                 |
-| -t, --templates-folder [path]       | Path to templates folder.                                          | cpf create text.txt src -t my-templates                |
-| -e, --encoding [encoding]           | Changes the content encoding of the read files.                    | cpf create text.txt src -e base64                      |
-| -rn, --replace-names [names...]     | Replaces the names of a file or folder.                            | cpf create [fileName].txt src -rn fileName=myFile      |
-| -nb, --no-brackets                  | Makes brackets not required when using the --replace-names option. | cpf create fileName.txt src -rn fileName=otherFile -nb |
-| -rc, --replace-content [content...] | Replaces parts of the contents of a file or files within a folder. | cpf create text.txt src -rc file=myFile                |
+| Option                                  | Description                                                                                 | Example                                                    |
+| --------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| -n, --name [name]                       | Changes the name of a file or folder.                                                       | cpf create text.txt src -n newName.txt                     |
+| -t, --templates-folder [path]           | Path to templates folder.                                                                   | cpf create text.txt src -t my-templates                    |
+| -e, --encoding [encoding]               | Changes the content encoding of the read files.                                             | cpf create text.txt src -e base64                          |
+| -rn, --replace-names [names...]         | Replaces the names of a file or folder.                                                     | cpf create [fileName].txt src -rn fileName=myFile          |
+| -nb, --no-brackets                      | Makes brackets not required when using the --replace-names option.                          | cpf create fileName.txt src -rn fileName=otherFile -nb     |
+| -rc, --replace-content [content...]     | Replaces parts of the contents of a file or files within a folder.                          | cpf create text.txt src -rc file=myFile                    |
+| -kvs, --key-value-separator [separator] | Defines a custom key-value separator for the --replace-names and --replace-content options. | cpf create [fileName].txt src -rn fileName@myFile -kvs "@" |
 
 - :large_blue_circle: `cpf help [command]`
 
