@@ -5,6 +5,7 @@ export interface CreateCommandOptions {
   replaceNames?: string[]
   replaceContent?: string[]
   brackets?: boolean
+  keyValueSeparator?: string
 }
 
 export interface CreateCommandOptionsWithDefaults extends CreateCommandOptions {
@@ -12,6 +13,7 @@ export interface CreateCommandOptionsWithDefaults extends CreateCommandOptions {
   templatesFolder: string
   encoding: BufferEncoding
   brackets: boolean
+  keyValueSeparator: string
 }
 
 export interface ParsedNamesToReplace {

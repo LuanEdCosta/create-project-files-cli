@@ -78,7 +78,7 @@ export class CreateCommand {
 
   private _getParsedNamesToReplace(): ParsedNamesToReplace[] | undefined {
     return this.options.replaceNames?.map?.((keyAndName) => {
-      const [key, name] = keyAndName.split('=')
+      const [key, name] = keyAndName.split(this.options.keyValueSeparator)
       return { key, name }
     })
   }
@@ -93,9 +93,10 @@ export class CreateCommand {
     )
 
     if (isReplaceNamesOptionIncorrectly) {
+      const separator = this.options.keyValueSeparator
       throw new SyntaxError({
         message: 'The --replace-names (-rn) option is incorrectly formatted',
-        expected: 'key1=name1 key2=name2',
+        expected: `key1${separator}name1 key2${separator}name2`,
         received: this.options.replaceNames.join(' '),
       })
     }
@@ -104,7 +105,7 @@ export class CreateCommand {
   private _getReplaceContentObject(): ReplaceContentObject {
     const replaceContentObject: { [key: string]: string } = {}
     this.options.replaceContent?.forEach?.((keyAndText) => {
-      const [key, text] = keyAndText.split('=')
+      const [key, text] = keyAndText.split(this.options.keyValueSeparator)
       replaceContentObject[key] = text
     })
     return replaceContentObject
@@ -118,9 +119,10 @@ export class CreateCommand {
     ).some(([key, text]) => !key || !text)
 
     if (this.options.replaceContent && isReplaceContentOptionIncorrectly) {
+      const separator = this.options.keyValueSeparator
       throw new SyntaxError({
         message: 'The --replace-content (-rc) option is incorrectly formatted',
-        expected: 'key1=text1 key2=text2',
+        expected: `key1${separator}text1 key2${separator}text2`,
         received: this.options.replaceContent.join(' '),
       })
     }

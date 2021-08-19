@@ -126,6 +126,7 @@ describe('CreateCommand tests', () => {
       replaceContent: ['text=something'],
       replaceNames: ['text=NewName'],
       templatesFolder: '__custom-templates__',
+      keyValueSeparator: '@',
     }
 
     const command = new CreateCommand('text.txt', testingFolder, newOptions)
@@ -538,6 +539,22 @@ describe('CreateCommand tests', () => {
     ])
   })
 
+  it('should work with a custom key value separator', () => {
+    const results = new CreateCommand('text.txt', testingFolder, {
+      replaceNames: ['text@anything'],
+      replaceContent: ['file@complex concept'],
+      keyValueSeparator: '@',
+      brackets: false,
+    }).run()
+
+    const fileContent = readFromTestingFolder('anything.txt')
+    expect(fileContent).toBe('This is a complex concept')
+
+    expect(results).toEqual([
+      getCreateCommandResult('file', 'text.txt', 'anything.txt'),
+    ])
+  })
+
   it('should throw NotFoundError if do not find the templates folder', () => {
     const command = new CreateCommand('text.txt', testingFolder, {
       templatesFolder: 'NonExistingFolder',
@@ -587,12 +604,18 @@ describe('CreateCommand tests', () => {
       replaceNames: [''],
     })
 
+    const seventhCommand = new CreateCommand('text.txt', testingFolder, {
+      replaceNames: ['text=file'],
+      keyValueSeparator: '#',
+    })
+
     expect(firstCommand.run.bind(firstCommand)).toThrowError(SyntaxError)
     expect(secondCommand.run.bind(secondCommand)).toThrowError(SyntaxError)
     expect(thirdCommand.run.bind(thirdCommand)).toThrowError(SyntaxError)
     expect(fourthCommand.run.bind(fourthCommand)).toThrowError(SyntaxError)
     expect(fifthCommand.run.bind(fifthCommand)).toThrowError(SyntaxError)
     expect(sixthCommand.run.bind(sixthCommand)).toThrowError(SyntaxError)
+    expect(seventhCommand.run.bind(seventhCommand)).toThrowError(SyntaxError)
   })
 
   it('should throw SyntaxError if --replace-content is incorrectly formatted', () => {
@@ -620,12 +643,18 @@ describe('CreateCommand tests', () => {
       replaceContent: [''],
     })
 
+    const seventhCommand = new CreateCommand('text.txt', testingFolder, {
+      replaceContent: ['file=tutorial'],
+      keyValueSeparator: '#',
+    })
+
     expect(firstCommand.run.bind(firstCommand)).toThrowError(SyntaxError)
     expect(secondCommand.run.bind(secondCommand)).toThrowError(SyntaxError)
     expect(thirdCommand.run.bind(thirdCommand)).toThrowError(SyntaxError)
     expect(fourthCommand.run.bind(fourthCommand)).toThrowError(SyntaxError)
     expect(fifthCommand.run.bind(fifthCommand)).toThrowError(SyntaxError)
     expect(sixthCommand.run.bind(sixthCommand)).toThrowError(SyntaxError)
+    expect(seventhCommand.run.bind(seventhCommand)).toThrowError(SyntaxError)
   })
 
   it('should throw NotFoundError if the source folder is empty', () => {
