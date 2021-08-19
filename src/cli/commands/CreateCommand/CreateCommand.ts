@@ -40,4 +40,9 @@ export const CreateCommand = new Command('create')
     'Replaces parts of the contents of a file or files within a folder',
     CREATE_COMMAND_DEFAULT_OPTIONS.replaceContent,
   )
+  .option(
+    '-kvs, --key-value-separator [separator]',
+    'Defines a custom key-value separator',
+    CREATE_COMMAND_DEFAULT_OPTIONS.keyValueSeparator,
+  )
   .action(createCommandAction)

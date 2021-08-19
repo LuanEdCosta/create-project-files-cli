@@ -5,4 +5,5 @@ export const CREATE_COMMAND_DEFAULT_OPTIONS = {
   replaceNames: undefined,
   replaceContent: undefined,
   brackets: true,
+  keyValueSeparator: '=',
 }
