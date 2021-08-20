@@ -2,6 +2,18 @@
 
 This file documents all version releases.
 
+## 1.2.0 - 2021-08-19
+
+**Fixes**
+
+- All options values are required. If you type the option, you must pass a valid value for it
+- The previous Create command results are cleared when running the same command instance again
+
+**New Features**
+
+- Create --key-value-separator or -kvs option to define a custom key-value separator for the --replace-names and --replace-content options
+- The Create command source, destination, and all options can be modified after create an instance
+
 ## 1.1.5 - 2021-08-18
 
 **Fixes**
