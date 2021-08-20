@@ -67,6 +67,10 @@ export class CreateCommand {
     this._createCommandResults.push(createCommandResult)
   }
 
+  private _clearCreateCommandResults() {
+    this._createCommandResults = []
+  }
+
   private _getTemplatesFolderPath(): string {
     return path.resolve(process.cwd(), this._options.templatesFolder)
   }
@@ -297,6 +301,7 @@ export class CreateCommand {
 
   public run(): CreateCommandResult[] {
     this._throwMisusedOptionsError()
+    this._clearCreateCommandResults()
 
     const templatesFolderPath = this._getTemplatesFolderPath()
     this._throwTemplatesFolderNotFound(templatesFolderPath)

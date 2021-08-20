@@ -212,6 +212,15 @@ describe('CreateCommand tests', () => {
     ])
   })
 
+  it('should clear previous results if run the same command two times', () => {
+    const command = new CreateCommand('text.txt', testingFolder)
+    const firstResults = command.run()
+    expect(firstResults).toHaveLength(1)
+    command.source = 'file_file.txt'
+    const secondResults = command.run()
+    expect(secondResults).toHaveLength(1)
+  })
+
   it('should create a folder with another folder inside', () => {
     const results = new CreateCommand('nested', testingFolder).run()
     expect(results).toEqual([
