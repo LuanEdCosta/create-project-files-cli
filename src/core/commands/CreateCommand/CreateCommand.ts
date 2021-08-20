@@ -19,20 +19,47 @@ import {
 } from '../../errors'
 
 export class CreateCommand {
-  readonly source: string
-  readonly destination: string
-  readonly options: CreateCommandOptionsWithDefaults
-
+  private _source: string
+  private _destination: string
+  private _options: CreateCommandOptionsWithDefaults
   private _createCommandResults: CreateCommandResult[]
+
+  public get source() {
+    return this._source
+  }
+
+  public set source(source: string) {
+    this._source = source
+  }
+
+  public get destination() {
+    return this._destination
+  }
+
+  public set destination(destination: string) {
+    this._destination = destination
+  }
+
+  public get options() {
+    return this._options
+  }
+
+  public changeOptions(options: CreateCommandOptions) {
+    if (options) this._options = { ...this._options, ...options }
+  }
+
+  public resetOptions() {
+    this._options = CREATE_COMMAND_DEFAULT_OPTIONS
+  }
 
   constructor(
     source: string,
     destination: string,
     options: CreateCommandOptions = CREATE_COMMAND_DEFAULT_OPTIONS,
   ) {
-    this.source = source
-    this.destination = destination
-    this.options = { ...CREATE_COMMAND_DEFAULT_OPTIONS, ...options }
+    this._source = source
+    this._destination = destination
+    this._options = { ...CREATE_COMMAND_DEFAULT_OPTIONS, ...options }
     this._createCommandResults = []
   }
 
@@ -40,12 +67,16 @@ export class CreateCommand {
     this._createCommandResults.push(createCommandResult)
   }
 
+  private _clearCreateCommandResults() {
+    this._createCommandResults = []
+  }
+
   private _getTemplatesFolderPath(): string {
-    return path.resolve(process.cwd(), this.options.templatesFolder)
+    return path.resolve(process.cwd(), this._options.templatesFolder)
   }
 
   private _getSourcePath(templatesFolderPath: string): string {
-    return path.resolve(templatesFolderPath, this.source)
+    return path.resolve(templatesFolderPath, this._source)
   }
 
   private _throwTemplatesFolderNotFound(templatesFolderPath: string): void {
@@ -77,8 +108,8 @@ export class CreateCommand {
   }
 
   private _getParsedNamesToReplace(): ParsedNamesToReplace[] | undefined {
-    return this.options.replaceNames?.map?.((keyAndName) => {
-      const [key, name] = keyAndName.split(this.options.keyValueSeparator)
+    return this._options.replaceNames?.map?.((keyAndName) => {
+      const [key, name] = keyAndName.split(this._options.keyValueSeparator)
       return { key, name }
     })
   }
@@ -86,26 +117,26 @@ export class CreateCommand {
   private _throwNamesToReplaceIncorrectlyFormatted(
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ) {
-    if (!parsedNamesToReplace || !this.options.replaceNames) return
+    if (!parsedNamesToReplace || !this._options.replaceNames) return
 
     const isReplaceNamesOptionIncorrectly = parsedNamesToReplace.some(
       ({ key, name }) => !key || !name,
     )
 
     if (isReplaceNamesOptionIncorrectly) {
-      const separator = this.options.keyValueSeparator
+      const separator = this._options.keyValueSeparator
       throw new SyntaxError({
         message: 'The --replace-names (-rn) option is incorrectly formatted',
         expected: `key1${separator}name1 key2${separator}name2`,
-        received: this.options.replaceNames.join(' '),
+        received: this._options.replaceNames.join(' '),
       })
     }
   }
 
   private _getReplaceContentObject(): ReplaceContentObject {
     const replaceContentObject: { [key: string]: string } = {}
-    this.options.replaceContent?.forEach?.((keyAndText) => {
-      const [key, text] = keyAndText.split(this.options.keyValueSeparator)
+    this._options.replaceContent?.forEach?.((keyAndText) => {
+      const [key, text] = keyAndText.split(this._options.keyValueSeparator)
       replaceContentObject[key] = text
     })
     return replaceContentObject
@@ -118,12 +149,12 @@ export class CreateCommand {
       replaceContentObject,
     ).some(([key, text]) => !key || !text)
 
-    if (this.options.replaceContent && isReplaceContentOptionIncorrectly) {
-      const separator = this.options.keyValueSeparator
+    if (this._options.replaceContent && isReplaceContentOptionIncorrectly) {
+      const separator = this._options.keyValueSeparator
       throw new SyntaxError({
         message: 'The --replace-content (-rc) option is incorrectly formatted',
         expected: `key1${separator}text1 key2${separator}text2`,
-        received: this.options.replaceContent.join(' '),
+        received: this._options.replaceContent.join(' '),
       })
     }
   }
@@ -146,7 +177,7 @@ export class CreateCommand {
     let replacedName = name
     if (parsedNamesToReplace) {
       parsedNamesToReplace.forEach(({ key, name }) => {
-        const keyToUse = this.options.brackets ? `[${key}]` : key
+        const keyToUse = this._options.brackets ? `[${key}]` : key
         if (replacedName.includes(keyToUse)) {
           replacedName = replacedName.replace(keyToUse, name)
         }
@@ -158,19 +189,19 @@ export class CreateCommand {
   private _getSourceName(
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ): string {
-    const defaultName = this._getPathLastPart(this.source)
+    const defaultName = this._getPathLastPart(this._source)
     const replacedName = this._getReplacedName(
       defaultName,
       parsedNamesToReplace,
     )
-    return this.options.name || replacedName
+    return this._options.name || replacedName
   }
 
   private _getDestinationPath(
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ): string {
     const folderName = this._getSourceName(parsedNamesToReplace)
-    return path.resolve(process.cwd(), this.destination, folderName)
+    return path.resolve(process.cwd(), this._destination, folderName)
   }
 
   private _getFileContent(
@@ -182,19 +213,19 @@ export class CreateCommand {
     const newFileContent = canReplaceContent
       ? TextUtils.replaceTextPieces(fileContent, replaceContentObject)
       : fileContent
-    return Buffer.from(newFileContent).toString(this.options.encoding)
+    return Buffer.from(newFileContent).toString(this._options.encoding)
   }
 
   private _throwMisusedOptionsError() {
-    const hasNameOption = !!this.options.name
-    const hasReplaceNamesOption = !!this.options.replaceNames
+    const hasNameOption = !!this._options.name
+    const hasReplaceNamesOption = !!this._options.replaceNames
     if (hasNameOption && hasReplaceNamesOption) {
       throw new MisusedOptionsError({
         message:
           'The --name (-n) option cannot be used together with the --replace-names (-rn) option to prevent unexpected results',
         options: {
-          name: this.options.name,
-          replaceNames: this.options.replaceNames,
+          name: this._options.name,
+          replaceNames: this._options.replaceNames,
         },
       })
     }
@@ -270,6 +301,7 @@ export class CreateCommand {
 
   public run(): CreateCommandResult[] {
     this._throwMisusedOptionsError()
+    this._clearCreateCommandResults()
 
     const templatesFolderPath = this._getTemplatesFolderPath()
     this._throwTemplatesFolderNotFound(templatesFolderPath)

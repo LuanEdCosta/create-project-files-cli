@@ -111,6 +111,8 @@ describe('CreateCommand tests', () => {
     expect(command).toHaveProperty('source')
     expect(command).toHaveProperty('options')
     expect(command).toHaveProperty('destination')
+    expect(command).toHaveProperty('resetOptions')
+    expect(command).toHaveProperty('changeOptions')
   })
 
   it('should use the default options correctly', () => {
@@ -131,6 +133,53 @@ describe('CreateCommand tests', () => {
 
     const command = new CreateCommand('text.txt', testingFolder, newOptions)
     expect(command.options).toEqual(newOptions)
+  })
+
+  it('should be able to change the source', () => {
+    const command = new CreateCommand('text.txt', testingFolder)
+    expect(command.source).toBe('text.txt')
+    command.source = 'file.js'
+    expect(command.source).toBe('file.js')
+  })
+
+  it('should be able to change the destination', () => {
+    const command = new CreateCommand('text.txt', 'folder')
+    expect(command.destination).toBe('folder')
+    command.destination = testingFolder
+    expect(command.destination).toBe(testingFolder)
+  })
+
+  it('should be able to change options', () => {
+    const command = new CreateCommand('text.txt', testingFolder)
+    expect(command.options).toEqual(CREATE_COMMAND_DEFAULT_OPTIONS)
+
+    command.changeOptions({
+      name: 'file.txt',
+      templatesFolder: customTemplatesFolder,
+    })
+
+    expect(command.options).toEqual({
+      ...CREATE_COMMAND_DEFAULT_OPTIONS,
+      name: 'file.txt',
+      templatesFolder: customTemplatesFolder,
+    })
+  })
+
+  it('should be able to reset options to default values', () => {
+    const command = new CreateCommand('text.txt', testingFolder, {
+      name: 'file.txt',
+      templatesFolder: customTemplatesFolder,
+    })
+
+    expect(command.options).toEqual({
+      ...CREATE_COMMAND_DEFAULT_OPTIONS,
+      name: 'file.txt',
+      templatesFolder: customTemplatesFolder,
+    })
+
+    command.resetOptions()
+
+    expect(command.options).toEqual(CREATE_COMMAND_DEFAULT_OPTIONS)
   })
 
   it('should create a text.txt file', () => {
@@ -161,6 +210,15 @@ describe('CreateCommand tests', () => {
       getCreateCommandResult('file', 'docs/info.txt', 'docs/info.txt'),
       getCreateCommandResult('file', 'docs/testing.txt', 'docs/testing.txt'),
     ])
+  })
+
+  it('should clear previous results if run the same command two times', () => {
+    const command = new CreateCommand('text.txt', testingFolder)
+    const firstResults = command.run()
+    expect(firstResults).toHaveLength(1)
+    command.source = 'file_file.txt'
+    const secondResults = command.run()
+    expect(secondResults).toHaveLength(1)
   })
 
   it('should create a folder with another folder inside', () => {
