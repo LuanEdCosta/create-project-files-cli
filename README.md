@@ -110,7 +110,6 @@ console.log(results)
 - Set an alias to a file or folder inside the templates folder.
 - Config file to simplify the use of this library.
 - --silent option to run the CLI silently.
-- Add uuid or timestamp to file names.
 - Create destination folder if not exists.
 - --force option to delete existing files and folders to create the new ones.
 
