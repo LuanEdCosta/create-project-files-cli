@@ -23,6 +23,7 @@ export class CreateCommand {
   private _destination: string
   private _options: CreateCommandOptionsWithDefaults
   private _createCommandResults: CreateCommandResult[]
+  private _commandStartTime: number = 0
 
   public get source() {
     return this._source
@@ -69,6 +70,10 @@ export class CreateCommand {
 
   private _clearCreateCommandResults() {
     this._createCommandResults = []
+  }
+
+  private _setCommandStartTime() {
+    this._commandStartTime = Date.now()
   }
 
   private _getTemplatesFolderPath(): string {
@@ -174,7 +179,7 @@ export class CreateCommand {
     const canAddTimestamp = name.includes(TIMESTAMP_KEY)
     if (canAddTimestamp) {
       const regex = new RegExp(TIMESTAMP_KEY, 'g')
-      return name.replace(regex, Date.now().toString())
+      return name.replace(regex, this._commandStartTime.toString())
     }
     return name
   }
@@ -330,6 +335,7 @@ export class CreateCommand {
   }
 
   public run(): CreateCommandResult[] {
+    this._setCommandStartTime()
     this._throwMisusedOptionsError()
     this._clearCreateCommandResults()
 
