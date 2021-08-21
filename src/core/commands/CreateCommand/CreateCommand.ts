@@ -10,7 +10,7 @@ import {
 } from './Types'
 
 import { TextUtils } from '../../utils'
-import { CREATE_COMMAND_DEFAULT_OPTIONS } from './Defaults'
+import { CREATE_COMMAND_DEFAULT_OPTIONS, TIMESTAMP_KEY } from './Defaults'
 import {
   NotFoundError,
   SyntaxError,
@@ -170,6 +170,15 @@ export class CreateCommand {
     return pathParts[pathParts.length - 1]
   }
 
+  private _getNameWithTimestamp(name: string): string {
+    const canAddTimestamp = name.includes(TIMESTAMP_KEY)
+    if (canAddTimestamp) {
+      const regex = new RegExp(TIMESTAMP_KEY, 'g')
+      return name.replace(regex, Date.now().toString())
+    }
+    return name
+  }
+
   private _getReplacedName(
     name: string,
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
@@ -189,12 +198,10 @@ export class CreateCommand {
   private _getSourceName(
     parsedNamesToReplace: ParsedNamesToReplace[] | undefined,
   ): string {
-    const defaultName = this._getPathLastPart(this._source)
-    const replacedName = this._getReplacedName(
-      defaultName,
-      parsedNamesToReplace,
-    )
-    return this._options.name || replacedName
+    if (this._options.name) return this._options.name
+    const originalName = this._getPathLastPart(this._source)
+    const nameWithTimestamp = this._getNameWithTimestamp(originalName)
+    return this._getReplacedName(nameWithTimestamp, parsedNamesToReplace)
   }
 
   private _getDestinationPath(
@@ -216,7 +223,7 @@ export class CreateCommand {
     return Buffer.from(newFileContent).toString(this._options.encoding)
   }
 
-  private _throwMisusedOptionsError() {
+  private _throwMisusedNameAndReplaceNamesOptions() {
     const hasNameOption = !!this._options.name
     const hasReplaceNamesOption = !!this._options.replaceNames
     if (hasNameOption && hasReplaceNamesOption) {
@@ -229,6 +236,25 @@ export class CreateCommand {
         },
       })
     }
+  }
+
+  private _throwMisusedNameWithTimestampInSource() {
+    const canAddTimestampToName = this._source.includes(TIMESTAMP_KEY)
+    const hasNameOption = !!this._options.name
+    if (canAddTimestampToName && hasNameOption) {
+      throw new MisusedOptionsError({
+        message:
+          'The --name (-n) option cannot be used when a timestamp is to be added to the file/folder name. You can still use the --replace-names (-rn) option to replace a part of the name',
+        options: {
+          name: this._options.name,
+        },
+      })
+    }
+  }
+
+  private _throwMisusedOptionsError() {
+    this._throwMisusedNameAndReplaceNamesOptions()
+    this._throwMisusedNameWithTimestampInSource()
   }
 
   private _createFolderRecursively(
@@ -247,7 +273,11 @@ export class CreateCommand {
       const isFolderItemDirectory = itemStatus.isDirectory()
       const isFolderItemFile = itemStatus.isFile()
 
-      const replacedName = this._getReplacedName(itemName, parsedNamesToReplace)
+      const nameWithTimestamp = this._getNameWithTimestamp(itemName)
+      const replacedName = this._getReplacedName(
+        nameWithTimestamp,
+        parsedNamesToReplace,
+      )
 
       if (isFolderItemFile) {
         const fileContent = this._getFileContent(

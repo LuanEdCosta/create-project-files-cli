@@ -3,8 +3,8 @@ import path from 'path'
 import mockFs from 'mock-fs'
 
 import { CreateCommand } from '../CreateCommand'
-import { CREATE_COMMAND_DEFAULT_OPTIONS } from '../Defaults'
 import { CreateCommandResult, CreateCommandOptions } from '../Types'
+import { CREATE_COMMAND_DEFAULT_OPTIONS, TIMESTAMP_KEY } from '../Defaults'
 import {
   SyntaxError,
   NotFoundError,
@@ -67,6 +67,8 @@ describe('CreateCommand tests', () => {
         '[file].txt': 'A file with brackets in the name',
         '[First]Of[Second].txt': '123456',
         '[({.+^$})].txt': '[({.+^$})]',
+        [`file-${TIMESTAMP_KEY}.txt`]: 'This file has a timestamp in the name',
+        [`${TIMESTAMP_KEY}-${TIMESTAMP_KEY}.txt`]: 'Multiple timestamps',
         'folder_[({.+^$})]': {
           'file.txt': '[({.+^$})]',
         },
@@ -79,6 +81,10 @@ describe('CreateCommand tests', () => {
         '[component]': {
           '[component].component.jsx': '// React component',
           '[component].styles.css': '.component {}',
+        },
+        [`timestamp-${TIMESTAMP_KEY}`]: {
+          [`file-${TIMESTAMP_KEY}.txt`]:
+            'This file has a timestamp in the name',
         },
         myFolder: {
           'myFile.txt': 'This is my file',
@@ -613,6 +619,87 @@ describe('CreateCommand tests', () => {
     ])
   })
 
+  it('should add a timestamp in the file name', () => {
+    const timestamp = new Date('2021-01-01').getTime()
+    jest.useFakeTimers('modern').setSystemTime(timestamp)
+
+    const results = new CreateCommand(
+      `file-${TIMESTAMP_KEY}.txt`,
+      testingFolder,
+    ).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult(
+        'file',
+        `file-${TIMESTAMP_KEY}.txt`,
+        `file-${timestamp}.txt`,
+      ),
+    ])
+
+    jest.useRealTimers()
+  })
+
+  it('should add a timestamp before replace parts of the file name', () => {
+    const timestamp = new Date('2021-01-01').getTime()
+    jest.useFakeTimers('modern').setSystemTime(timestamp)
+
+    const results = new CreateCommand(
+      `file-${TIMESTAMP_KEY}.txt`,
+      testingFolder,
+      {
+        replaceNames: [`${TIMESTAMP_KEY}=TEST`, 'file=log'],
+        brackets: false,
+      },
+    ).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult(
+        'file',
+        `file-${TIMESTAMP_KEY}.txt`,
+        `log-${timestamp}.txt`,
+      ),
+    ])
+
+    jest.useRealTimers()
+  })
+
+  it('should add a timestamp in multiple parts of the file name', () => {
+    const timestamp = new Date('2021-01-01').getTime()
+    jest.useFakeTimers('modern').setSystemTime(timestamp)
+    const source = `${TIMESTAMP_KEY}-${TIMESTAMP_KEY}.txt`
+    const results = new CreateCommand(source, testingFolder).run()
+    const destination = `${timestamp}-${timestamp}.txt`
+    expect(results).toEqual([
+      getCreateCommandResult('file', source, destination),
+    ])
+    jest.useRealTimers()
+  })
+
+  it('should add a timestamp in the folder name and in its files', () => {
+    const timestamp = new Date('2021-01-01').getTime()
+    jest.useFakeTimers('modern').setSystemTime(timestamp)
+
+    const results = new CreateCommand(
+      `timestamp-${TIMESTAMP_KEY}`,
+      testingFolder,
+    ).run()
+
+    expect(results).toEqual([
+      getCreateCommandResult(
+        'folder',
+        `timestamp-${TIMESTAMP_KEY}`,
+        `timestamp-${timestamp}`,
+      ),
+      getCreateCommandResult(
+        'file',
+        `timestamp-${TIMESTAMP_KEY}/file-${TIMESTAMP_KEY}.txt`,
+        `timestamp-${timestamp}/file-${timestamp}.txt`,
+      ),
+    ])
+
+    jest.useRealTimers()
+  })
+
   it('should throw NotFoundError if do not find the templates folder', () => {
     const command = new CreateCommand('text.txt', testingFolder, {
       templatesFolder: 'NonExistingFolder',
@@ -738,5 +825,31 @@ describe('CreateCommand tests', () => {
     })
 
     expect(command.run.bind(command)).toThrowError(MisusedOptionsError)
+  })
+
+  it('should throw MisusedOptionsError if uses the name option and the timestamp key in the file/folder name', () => {
+    const commandToCreateFile = new CreateCommand(
+      `file-${TIMESTAMP_KEY}.txt`,
+      testingFolder,
+      {
+        name: 'file.txt',
+      },
+    )
+
+    const commandToCreateFolder = new CreateCommand(
+      `timestamp-${TIMESTAMP_KEY}`,
+      testingFolder,
+      {
+        name: 'timestamp-custom',
+      },
+    )
+
+    expect(commandToCreateFile.run.bind(commandToCreateFile)).toThrowError(
+      MisusedOptionsError,
+    )
+
+    expect(commandToCreateFolder.run.bind(commandToCreateFolder)).toThrowError(
+      MisusedOptionsError,
+    )
   })
 })

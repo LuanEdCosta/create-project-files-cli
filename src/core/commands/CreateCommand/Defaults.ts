@@ -7,3 +7,5 @@ export const CREATE_COMMAND_DEFAULT_OPTIONS = {
   brackets: true,
   keyValueSeparator: '=',
 }
+
+export const TIMESTAMP_KEY = '@TIME'
