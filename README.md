@@ -68,7 +68,7 @@ Follow the steps below to learn how to use this library.
 
 ## :page_facing_up: Documentation
 
-- :large_blue_circle: `cpf create <source> <destination> [options]`
+### :large_blue_circle: `cpf create <source> <destination> [options]`
 
 Creates a file or folder based on the `<source> at <destination>`.
 
@@ -82,7 +82,17 @@ Creates a file or folder based on the `<source> at <destination>`.
 | -rc, --replace-content `<content...>`     | Replaces parts of the contents of a file or files within a folder.                          | cpf create text.txt src -rc file=myFile                    |
 | -kvs, --key-value-separator `<separator>` | Defines a custom key-value separator for the --replace-names and --replace-content options. | cpf create [fileName].txt src -rn fileName@myFile -kvs "@" |
 
-- :large_blue_circle: `cpf help [command]`
+**Timestamp in File or Folder Name**
+
+If you want to add the current timestamp in a file or folder name you just need to put `@TIME` in the name, examples:
+
+- `file-@TIME.txt` will become `file-1234567891011.txt`
+- `folder-@TIME` will become `folder-1234567891011`
+- `@TIME-@TIME` will become `1234567891011-1234567891011`
+
+_It also works in nested folders and files_
+
+### :large_blue_circle: `cpf help [command]`
 
 Display the help for a command or all commands.
 
