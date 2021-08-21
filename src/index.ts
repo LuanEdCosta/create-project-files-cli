@@ -7,6 +7,9 @@ export {
   CreateCommandOptions,
   CREATE_COMMAND_DEFAULT_OPTIONS,
   CreateCommandOptionsWithDefaults,
+  InitCommand,
+  DEFAULT_CONFIG_FILE_DATA,
+  DEFAULT_CONFIG_FILE_NAME,
 } from './core/commands'
 
 export {
