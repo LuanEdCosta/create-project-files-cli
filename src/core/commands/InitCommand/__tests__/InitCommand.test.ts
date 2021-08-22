@@ -15,6 +15,11 @@ describe('InitCommand tests', () => {
     mockFs.restore()
   })
 
+  it('should have the correct attrs and methods', () => {
+    const command = new InitCommand()
+    expect(command).toHaveProperty('run')
+  })
+
   it('should create the config file in the root directory', () => {
     new InitCommand().run()
     const configFilePath = path.resolve(process.cwd(), DEFAULT_CONFIG_FILE_NAME)
