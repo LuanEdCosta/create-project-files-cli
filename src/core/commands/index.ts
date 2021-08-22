@@ -14,3 +14,5 @@ export {
   DEFAULT_CONFIG_FILE_DATA,
   DEFAULT_CONFIG_FILE_NAME,
 } from './InitCommand'
+
+export { RunCommand } from './RunCommand'

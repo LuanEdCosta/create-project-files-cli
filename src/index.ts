@@ -10,6 +10,7 @@ export {
   InitCommand,
   DEFAULT_CONFIG_FILE_DATA,
   DEFAULT_CONFIG_FILE_NAME,
+  RunCommand,
 } from './core/commands'
 
 export {
