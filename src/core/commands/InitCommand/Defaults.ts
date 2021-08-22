@@ -7,18 +7,22 @@ export const DEFAULT_CONFIG_FILE_DATA = {
   commands: {
     component: {
       description: 'This command creates a text file',
-      sourcePath: 'text.txt',
-      destinationPath: '.',
-      brackets: false,
-      replaceNames: {
-        text: '{name}',
-      },
-      replaceContent: {
-        name: '{name}',
-      },
       params: {
         name: 'Whats the name of the file (without extension)?',
       },
+      create: [
+        {
+          sourcePath: 'text.txt',
+          destinationPath: '.',
+          brackets: false,
+          replaceNames: {
+            text: '{name}',
+          },
+          replaceContent: {
+            name: '{name}',
+          },
+        },
+      ],
     },
   },
 }
