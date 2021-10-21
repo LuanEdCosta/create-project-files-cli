@@ -72,6 +72,8 @@ Follow the steps below to learn how to use this library.
 
 Creates a file or folder based on the `<source> at <destination>`.
 
+Example: `cpf create component src/components`. 
+
 | Option                                    | Description                                                                                 | Example                                                    |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | -n, --name `<name>`                       | Changes the name of a file or folder.                                                       | cpf create text.txt src -n newName.txt                     |
